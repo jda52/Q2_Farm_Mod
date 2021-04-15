@@ -701,6 +701,12 @@ char *single_statusbar =
 "	xv	148 "
 "	pic	11 "
 "endif "
+
+"if 23 "
+" xv 0 "
+" yb -150"
+" num 4 23"
+" endif " 
 ;
 
 char *dm_statusbar =
