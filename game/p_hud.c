@@ -385,7 +385,7 @@ void G_SetStats (edict_t *ent)
 	//
 	ent->client->ps.stats[STAT_HEALTH_ICON] = level.pic_health;
 	ent->client->ps.stats[STAT_HEALTH] = ent->health;
-
+	ent->client->ps.stats[CASH] = 50;
 	//
 	// ammo
 	//
@@ -433,6 +433,16 @@ void G_SetStats (edict_t *ent)
 		ent->client->ps.stats[STAT_ARMOR_ICON] = 0;
 		ent->client->ps.stats[STAT_ARMOR] = 0;
 	}
+
+	//
+	// Crops
+	//
+
+	ent->client->ps.stats[Crop1] = 0;
+	ent->client->ps.stats[Crop2] = 0;
+	ent->client->ps.stats[Crop3] = 0;
+	ent->client->ps.stats[Crop4] = 0;
+	ent->client->ps.stats[Crop5] = 0;
 
 	//
 	// pickup message

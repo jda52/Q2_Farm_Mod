@@ -1,0 +1,61 @@
+﻿Build started 4/15/2021 2:39:25 PM.
+     1>Project "C:\Git\IT_266\Quake2Modding\Farm Mod\quake2-3.21\quake2.vcxproj" on node 2 (Build target(s)).
+     1>Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:".\release\quake2.exe" /INCREMENTAL:NO /NOLOGO winmm.lib wsock32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\release\quake2.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\release\quake2.lib" /MACHINE:X86 /SAFESEH .\release\q2.res
+         .\release\cd_win.obj
+         .\release\cl_cin.obj
+         .\release\cl_ents.obj
+         .\release\cl_fx.obj
+         .\release\cl_input.obj
+         .\release\cl_inv.obj
+         .\release\cl_main.obj
+         .\release\cl_newfx.obj
+         .\release\cl_parse.obj
+         .\release\cl_pred.obj
+         .\release\cl_scrn.obj
+         .\release\cl_tent.obj
+         .\release\cl_view.obj
+         .\release\cmd.obj
+         .\release\cmodel.obj
+         .\release\common.obj
+         .\release\conproc.obj
+         .\release\console.obj
+         .\release\crc.obj
+         .\release\cvar.obj
+         .\release\files.obj
+         .\release\in_win.obj
+         .\release\keys.obj
+         .\release\m_flash.obj
+         .\release\md4.obj
+         .\release\menu.obj
+         .\release\net_chan.obj
+         .\release\net_wins.obj
+         .\release\pmove.obj
+         .\release\q_shared.obj
+         .\release\q_shwin.obj
+         .\release\qmenu.obj
+         .\release\snd_dma.obj
+         .\release\snd_mem.obj
+         .\release\snd_mix.obj
+         .\release\snd_win.obj
+         .\release\sv_ccmds.obj
+         .\release\sv_ents.obj
+         .\release\sv_game.obj
+         .\release\sv_init.obj
+         .\release\sv_main.obj
+         .\release\sv_send.obj
+         .\release\sv_user.obj
+         .\release\sv_world.obj
+         .\release\sys_win.obj
+         .\release\vid_dll.obj
+         .\release\vid_menu.obj
+         .\release\x86.obj
+         "C:\Git\IT_266\Quake2Modding\Farm Mod\quake2-3.21\ctf\release\gamex86.lib"
+         "C:\Git\IT_266\Quake2Modding\Farm Mod\quake2-3.21\release\gamex86.lib"
+         "C:\Git\IT_266\Quake2Modding\Farm Mod\quake2-3.21\release\ref_gl.lib"
+         quake2.vcxproj -> C:\Git\IT_266\Quake2Modding\Farm Mod\quake2-3.21\.\release\quake2.exe
+     1>Done Building Project "C:\Git\IT_266\Quake2Modding\Farm Mod\quake2-3.21\quake2.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.40
