@@ -1110,5 +1110,9 @@ struct edict_s
 	// common data blocks
 	moveinfo_t		moveinfo;
 	monsterinfo_t	monsterinfo;
+
+	edict_t *keeper;    //Pointer to decoy
+	edict_t *creator;  //Who created this entity (used by decoy)
+	qboolean inShop;
 };
 

@@ -625,7 +625,7 @@ void InitClientPersistant (gclient_t *client)
 	client->pers.max_grenades	= 50;
 	client->pers.max_cells		= 200;
 	client->pers.max_slugs		= 50;
-
+	
 	client->pers.connected = true;
 }
 
@@ -1251,7 +1251,7 @@ void PutClientInServer (edict_t *ent)
 	}
 
 	gi.linkentity (ent);
-
+	
 	// force the current weapon up
 	client->newweapon = client->pers.weapon;
 	ChangeWeapon (ent);
@@ -1353,7 +1353,7 @@ void ClientBegin (edict_t *ent)
 			gi.bprintf (PRINT_HIGH, "%s entered the game\n", ent->client->pers.netname);
 		}
 	}
-
+	
 	// make sure all view stuff is valid
 	ClientEndServerFrame (ent);
 }
