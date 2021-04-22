@@ -1,0 +1,62 @@
+﻿Build started 4/21/2021 12:05:15 PM.
+     1>Project "C:\Git\IT_266\Quake2Modding\Farm Mod\quake2-3.21\ref_soft\ref_soft.vcxproj" on node 4 (Build target(s)).
+     1>CustomBuild:
+         Performing Custom Build Tools
+         Microsoft (R) Macro Assembler Version 12.00.21005.1
+         Copyright (C) Microsoft Corporation.  All rights reserved.
+         
+          Assembling: C:\Git\IT_266\Quake2Modding\Farm
+     1>MASM : fatal error A1000: cannot open file : C:\Git\IT_266\Quake2Modding\Farm
+         Performing Custom Build Tools
+          Assembling: C:\Git\IT_266\Quake2Modding\Farm
+     1>MASM : fatal error A1000: cannot open file : C:\Git\IT_266\Quake2Modding\Farm
+         Microsoft (R) Macro Assembler Version 12.00.21005.1
+         Copyright (C) Microsoft Corporation.  All rights reserved.
+         
+         Performing Custom Build Tools
+          Assembling: C:\Git\IT_266\Quake2Modding\Farm
+     1>MASM : fatal error A1000: cannot open file : C:\Git\IT_266\Quake2Modding\Farm
+         Microsoft (R) Macro Assembler Version 12.00.21005.1
+         Copyright (C) Microsoft Corporation.  All rights reserved.
+         
+         Performing Custom Build Tools
+         Microsoft (R) Macro Assembler Version 12.00.21005.1
+         Copyright (C) Microsoft Corporation.  All rights reserved.
+         
+          Assembling: C:\Git\IT_266\Quake2Modding\Farm
+     1>MASM : fatal error A1000: cannot open file : C:\Git\IT_266\Quake2Modding\Farm
+         Performing Custom Build Tools
+          Assembling: C:\Git\IT_266\Quake2Modding\Farm
+     1>MASM : fatal error A1000: cannot open file : C:\Git\IT_266\Quake2Modding\Farm
+         Microsoft (R) Macro Assembler Version 12.00.21005.1
+         Copyright (C) Microsoft Corporation.  All rights reserved.
+         
+         Performing Custom Build Tools
+          Assembling: C:\Git\IT_266\Quake2Modding\Farm
+     1>MASM : fatal error A1000: cannot open file : C:\Git\IT_266\Quake2Modding\Farm
+         Microsoft (R) Macro Assembler Version 12.00.21005.1
+         Copyright (C) Microsoft Corporation.  All rights reserved.
+         
+         Performing Custom Build Tools
+         Microsoft (R) Macro Assembler Version 12.00.21005.1
+         Copyright (C) Microsoft Corporation.  All rights reserved.
+         
+          Assembling: C:\Git\IT_266\Quake2Modding\Farm
+     1>MASM : fatal error A1000: cannot open file : C:\Git\IT_266\Quake2Modding\Farm
+         Performing Custom Build Tools
+          Assembling: C:\Git\IT_266\Quake2Modding\Farm
+     1>MASM : fatal error A1000: cannot open file : C:\Git\IT_266\Quake2Modding\Farm
+         Microsoft (R) Macro Assembler Version 12.00.21005.1
+         Copyright (C) Microsoft Corporation.  All rights reserved.
+         
+         Performing Custom Build Tools
+          Assembling: C:\Git\IT_266\Quake2Modding\Farm
+     1>MASM : fatal error A1000: cannot open file : C:\Git\IT_266\Quake2Modding\Farm
+         Microsoft (R) Macro Assembler Version 12.00.21005.1
+         Copyright (C) Microsoft Corporation.  All rights reserved.
+         
+     1>Done Building Project "C:\Git\IT_266\Quake2Modding\Farm Mod\quake2-3.21\ref_soft\ref_soft.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:00.47

@@ -20,7 +20,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "g_local.h"
 #include "m_player.h"
 
-
+qboolean buyMenu = false;
+qboolean sellMenu = false;
 char *ClientTeam (edict_t *ent)
 {
 	char		*p;
@@ -987,6 +988,105 @@ void ClientCommand (edict_t *ent)
 		Cmd_Wave_f (ent);
 	else if (Q_stricmp(cmd, "playerlist") == 0)
 		Cmd_PlayerList_f(ent);
+	else if (Q_stricmp(cmd, "shop") == 0)
+		SP_monster_NPC(ent);
+	else if (Q_stricmp(cmd, "1") == 0)
+	{
+		if (ent->inShop == false)
+		{
+			return;
+		}
+		if (buyMenu == false && sellMenu == false)
+		{
+			buyMenu = true;
+			Buy(ent);
+		}
+		else if(buyMenu = true && sellMenu == false)
+		{
+			gi.cprintf(ent, PRINT_HIGH, "Bought Apples\ncash:%i\n", ent->client->ps.stats[CASH]);
+		}
+		else if (buyMenu = false && sellMenu == true)
+		{
+			gi.cprintf(ent, PRINT_HIGH, "Sold Apples\ncash:%i\n", ent->client->ps.stats[CASH]);
+		}
+	}
+	else if (Q_stricmp(cmd, "2") == 0)
+	{
+		if (ent->inShop == false)
+		{
+			return;
+		}
+		if (buyMenu == false && sellMenu == false)
+		{
+			sellMenu = true;
+			Sell(ent);
+		}
+		else if (buyMenu = true && sellMenu == false)
+		{
+			gi.cprintf(ent, PRINT_HIGH, "Bought Banana\ncash:%i\n", ent->client->ps.stats[CASH]);
+		}
+		else if (buyMenu = false && sellMenu == true)
+		{
+			gi.cprintf(ent, PRINT_HIGH, "Sold Banana\ncash:%i\n", ent->client->ps.stats[CASH]);
+		}
+	}
+	else if (Q_stricmp(cmd, "3") == 0)
+	{
+		if (ent->inShop == false)
+		{
+			return;
+		}
+		if (buyMenu = true && sellMenu == false)
+		{
+			gi.cprintf(ent, PRINT_HIGH, "Bought Cherry\ncash:%i\n", ent->client->ps.stats[CASH]);
+		}
+		else if (buyMenu = false && sellMenu == true)
+		{
+			gi.cprintf(ent, PRINT_HIGH, "Sold Cherry\ncash:%i\n", ent->client->ps.stats[CASH]);
+		}
+	}
+	else if (Q_stricmp(cmd, "4") == 0)
+	{
+		if (ent->inShop == false)
+		{
+			return;
+		}
+		else if (buyMenu = true && sellMenu == false)
+		{
+			gi.cprintf(ent, PRINT_HIGH, "Bought Durian\ncash:%i\n", ent->client->ps.stats[CASH]);
+		}
+		else if (buyMenu = false && sellMenu == true)
+		{
+			gi.cprintf(ent, PRINT_HIGH, "Sold Durian\ncash:%i\n", ent->client->ps.stats[CASH]);
+		}
+	}
+	else if (Q_stricmp(cmd, "5") == 0)
+	{
+		if (ent->inShop == false)
+		{
+			return;
+		}
+		else if (buyMenu = true && sellMenu == false)
+		{
+			gi.cprintf(ent, PRINT_HIGH, "Bought ElderBerry\n cash:%i\n", ent->client->ps.stats[CASH]);
+		}
+		else if (buyMenu = false && sellMenu == true)
+		{
+			gi.cprintf(ent, PRINT_HIGH, "Sold ElderBerry\ncash:%i\n", ent->client->ps.stats[CASH]);
+		}
+	}
+	else if (Q_stricmp(cmd, "6") == 0)
+	{
+		if (ent->inShop == false)
+		{
+			return;
+		}
+		else
+		{
+			gi.cprintf(ent, PRINT_HIGH, "Please come again\n");
+			ent->inShop = false;
+		}
+	}
 	else	// anything that doesn't match a command will be a chat
 		Cmd_Say_f (ent, false, true);
 }
