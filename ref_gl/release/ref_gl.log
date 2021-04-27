@@ -1,4 +1,4 @@
-﻿Build started 4/22/2021 10:02:29 AM.
+﻿Build started 4/27/2021 10:51:45 AM.
      1>Project "C:\Git\IT_266\Quake2Modding\Farm Mod\quake2-3.21\ref_gl\ref_gl.vcxproj" on node 3 (Build target(s)).
      1>Link:
          ref_gl.vcxproj -> C:\Git\IT_266\Quake2Modding\Farm Mod\quake2-3.21\ref_gl\.\..\release\ref_gl.dll
@@ -6,4 +6,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.11
+Time Elapsed 00:00:00.09

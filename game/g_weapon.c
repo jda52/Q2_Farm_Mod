@@ -342,6 +342,260 @@ void blaster_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *
 	G_FreeEdict (self);
 }
 
+static void fruit_Touch(edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
+{
+	if (self->classname == "apple" || self->classname == "banana" || self->classname == "cherry" || self->classname == "durian" || self->classname == "elder")
+	{
+		if (!other->client)
+		{
+			return;
+		}
+		else
+		{
+			if (self->classname == "apple")
+			{
+				other->client->pers.apple++;
+				gi.centerprintf(other, "Apples in inventory: %i", other->client->pers.apple);
+			}
+			else if (self->classname == "banana")
+			{
+				other->client->pers.banana++;
+				gi.centerprintf(other, "Bananas in inventory: %i", other->client->pers.banana);
+			}
+			else if (self->classname == "cherry")
+			{
+				other->client->pers.cherry++;
+				gi.centerprintf(other, "Cherries in inventory: %i", other->client->pers.cherry);
+			}
+			else if (self->classname == "durian")
+			{
+				other->client->pers.durian++;
+				gi.centerprintf(other, "Durians in inventory: %i", other->client->pers.durian);
+			}
+			else if (self->classname == "elder")
+			{
+				other->client->pers.elder++;
+				gi.centerprintf(other, "Elder berries in inventory: %i", other->client->pers.elder);
+			}
+		}
+		G_FreeEdict(self);
+	}
+	return;
+}
+void grownApple(edict_t*self)
+{
+	if (level.time > self->delay)
+	{
+		self->s.modelindex = gi.modelindex("models/items/ammo/grenades/medium/tris.md2");
+		self->classname = "apple";
+	}
+	self->think = grownApple;
+	self->nextthink = level.time + 1;
+	return;
+}
+void plantApple(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius)
+{
+	edict_t	*apple;
+	vec3_t	dir;
+	vec3_t	forward, right, up;
+
+	vectoangles(aimdir, dir);
+	AngleVectors(dir, forward, right, up);
+
+	apple = G_Spawn();
+	VectorCopy(start, apple->s.origin);
+	VectorScale(aimdir, speed, apple->velocity);
+	VectorMA(apple->velocity, 200 + crandom() * 10.0, up, apple->velocity);
+	VectorMA(apple->velocity, crandom() * 10.0, right, apple->velocity);
+	VectorSet(apple->avelocity, 300, 300, 300);
+	apple->movetype = MOVETYPE_NONE;
+	apple->clipmask = MASK_SHOT;
+	apple->solid = SOLID_TRIGGER;
+	apple->s.effects |= EF_GRENADE;
+	VectorClear(apple->mins);
+	VectorClear(apple->maxs);
+	apple->s.modelindex = gi.modelindex("models/objects/grenade/tris.md2");
+	apple->owner = self;
+	apple->touch = fruit_Touch;
+	apple->nextthink = level.time + timer;
+	apple->think = grownApple;
+	apple->delay = level.time + 60;
+	apple->classname = "apple_seed";
+
+	gi.linkentity(apple);
+		
+}
+
+void grownBanana(edict_t*self)
+{
+	if (level.time > self->delay)
+	{
+		self->s.modelindex = gi.modelindex("models/weapons/g_shotg/tris.md2");
+		self->classname = "banana";
+	}
+	self->think = grownBanana;
+	self->nextthink = level.time + 1;
+	return;
+}
+void plantBanana(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius)
+{
+	edict_t	*banana;
+	vec3_t	dir;
+	vec3_t	forward, right, up;
+
+	vectoangles(aimdir, dir);
+	AngleVectors(dir, forward, right, up);
+
+	banana = G_Spawn();
+	VectorCopy(start, banana->s.origin);
+	VectorScale(aimdir, speed, banana->velocity);
+	VectorMA(banana->velocity, 200 + crandom() * 10.0, up, banana->velocity);
+	VectorMA(banana->velocity, crandom() * 10.0, right, banana->velocity);
+	VectorSet(banana->avelocity, 300, 300, 300);
+	banana->movetype = MOVETYPE_NONE;
+	banana->clipmask = MASK_SHOT;
+	banana->solid = SOLID_TRIGGER;
+	banana->s.effects |= EF_GRENADE;
+	VectorClear(banana->mins);
+	VectorClear(banana->maxs);
+	banana->s.modelindex = gi.modelindex("models/items/ammo/shells/medium/tris.md2");
+	banana->owner = self;
+	banana->touch = fruit_Touch;
+	banana->nextthink = level.time + timer;
+	banana->think = grownBanana;
+	banana->delay = level.time + 60;
+	banana->classname = "banana_seed";
+
+	gi.linkentity(banana);
+
+}
+void grownCherry(edict_t*self)
+{
+	if (level.time > self->delay)
+	{
+		self->s.modelindex = gi.modelindex("models/weapons/g_machn/tris.md2");
+		self->classname = "cherry";
+	}
+	self->think = grownCherry;
+	self->nextthink = level.time + 1;
+	return;
+}
+void plantCherry(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius)
+{
+	edict_t	*cherry;
+	vec3_t	dir;
+	vec3_t	forward, right, up;
+
+	vectoangles(aimdir, dir);
+	AngleVectors(dir, forward, right, up);
+
+	cherry = G_Spawn();
+	VectorCopy(start, cherry->s.origin);
+	VectorScale(aimdir, speed, cherry->velocity);
+	VectorMA(cherry->velocity, 200 + crandom() * 10.0, up, cherry->velocity);
+	VectorMA(cherry->velocity, crandom() * 10.0, right, cherry->velocity);
+	VectorSet(cherry->avelocity, 300, 300, 300);
+	cherry->movetype = MOVETYPE_NONE;
+	cherry->clipmask = MASK_SHOT;
+	cherry->solid = SOLID_TRIGGER;
+	cherry->s.effects |= EF_GRENADE;
+	VectorClear(cherry->mins);
+	VectorClear(cherry->maxs);
+	cherry->s.modelindex = gi.modelindex("models/items/ammo/bullets/medium/tris.md2");
+	cherry->owner = self;
+	cherry->touch = fruit_Touch;
+	cherry->nextthink = level.time + timer;
+	cherry->think = grownCherry;
+	cherry->delay = level.time + 60;
+	cherry->classname = "cherry_seed";
+
+	gi.linkentity(cherry);
+}
+void grownDurian(edict_t*self)
+{
+	if (level.time > self->delay)
+	{
+		self->s.modelindex = gi.modelindex("models/weapons/g_rail/tris.md2");
+		self->classname = "durian";
+	}
+	self->think = grownDurian;
+	self->nextthink = level.time + 1;
+	return;
+}
+void plantDurian(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius)
+{
+	edict_t	*durian;
+	vec3_t	dir;
+	vec3_t	forward, right, up;
+
+	vectoangles(aimdir, dir);
+	AngleVectors(dir, forward, right, up);
+
+	durian = G_Spawn();
+	VectorCopy(start, durian->s.origin);
+	VectorScale(aimdir, speed, durian->velocity);
+	VectorMA(durian->velocity, 200 + crandom() * 10.0, up, durian->velocity);
+	VectorMA(durian->velocity, crandom() * 10.0, right, durian->velocity);
+	VectorSet(durian->avelocity, 300, 300, 300);
+	durian->movetype = MOVETYPE_NONE;
+	durian->clipmask = MASK_SHOT;
+	durian->solid = SOLID_TRIGGER;
+	durian->s.effects |= EF_GRENADE;
+	VectorClear(durian->mins);
+	VectorClear(durian->maxs);
+	durian->s.modelindex = gi.modelindex("models/items/ammo/cells/medium/tris.md2");
+	durian->owner = self;
+	durian->touch = fruit_Touch;
+	durian->nextthink = level.time + timer;
+	durian->think = grownDurian;
+	durian->delay = level.time + 60;
+	durian->classname = "durian_seed";
+
+	gi.linkentity(durian);
+}
+void grownElder(edict_t*self)
+{
+	if (level.time > self->delay)
+	{
+		self->s.modelindex = gi.modelindex("models/weapons/g_rocket/tris.md2");
+		self->classname = "elder";
+	}
+	self->think = grownElder;
+	self->nextthink = level.time + 1;
+	return;
+}
+void plantElder(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius)
+{
+	edict_t	*elder;
+	vec3_t	dir;
+	vec3_t	forward, right, up;
+
+	vectoangles(aimdir, dir);
+	AngleVectors(dir, forward, right, up);
+
+	elder = G_Spawn();
+	VectorCopy(start, elder->s.origin);
+	VectorScale(aimdir, speed, elder->velocity);
+	VectorMA(elder->velocity, 200 + crandom() * 10.0, up, elder->velocity);
+	VectorMA(elder->velocity, crandom() * 10.0, right, elder->velocity);
+	VectorSet(elder->avelocity, 300, 300, 300);
+	elder->movetype = MOVETYPE_NONE;
+	elder->clipmask = MASK_SHOT;
+	elder->solid = SOLID_TRIGGER;
+	elder->s.effects |= EF_GRENADE;
+	VectorClear(elder->mins);
+	VectorClear(elder->maxs);
+	elder->s.modelindex = gi.modelindex("models/items/ammo/rockets/medium/tris.md2");
+	elder->owner = self;
+	elder->touch = fruit_Touch;
+	elder->nextthink = level.time + timer;
+	elder->think = grownElder;
+	elder->delay = level.time + 60;
+	elder->classname = "elder_seed";
+
+	gi.linkentity(elder);
+
+}
 void fire_blaster (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, int effect, qboolean hyper)
 {
 	edict_t	*bolt;

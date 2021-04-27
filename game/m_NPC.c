@@ -336,12 +336,12 @@ void NPC_die(edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, v
 */
 void Buy(edict_t *ent)
 {
-	gi.centerprintf(ent, "1.Apple\n 2.Banana\n 3.Cherry\n 4.Durian\n 5.ElderBerry\nCash: %i", ent->client->ps.stats[CASH]);
+	gi.centerprintf(ent, "1.Apple-3\n 2.Banana-6\n 3.Cherry-9\n 4.Durian-12\n 5.ElderBerry-15\nCash: %i", ent->client->ps.stats[CASH]);
 }
 
 void Sell(edict_t *ent)
 {
-	gi.centerprintf(ent, "Sell\n 1.Apple\n 2.Banana\n 3.Cherry\n 4.Durian\n 5.ElderBerryCash: %i", ent->client->ps.stats[CASH]);
+	gi.centerprintf(ent, "Sell\n 1.Apple-5\n 2.Banana-10\n 3.Cherry-15\n 4.Durian-20\n 5.ElderBerry-25\nCash: %i", ent->client->ps.stats[CASH]);
 }
 
 void Touch_Shop(edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf)
@@ -351,7 +351,7 @@ void Touch_Shop(edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf)
 	else
 	{
 		other->inShop = true;
-		gi.centerprintf(other, "What would you like?\n 1.Buy\n 2.Sell");
+		gi.centerprintf(other, "What would you like?\n 1.Buy\n 2.Sell\n");
 	}
 }
 void SP_monster_NPC(edict_t *owner)

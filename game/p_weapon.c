@@ -829,7 +829,72 @@ void Blaster_Fire (edict_t *ent, vec3_t g_offset, int damage, qboolean hyper, in
 	VectorScale (forward, -2, ent->client->kick_origin);
 	ent->client->kick_angles[0] = -1;
 
-	fire_blaster (ent, start, forward, damage, 1000, effect, hyper);
+	if (ent->client->seedType == 1)
+	{
+		if (ent->client->pers.appleSeeds > 0)
+		{
+			ent->client->pers.appleSeeds--;
+			gi.centerprintf(ent, "Apple seeds left: %i\n", ent->client->pers.appleSeeds);
+			plantApple(ent, start, forward, damage, 1000, 6, 20);
+		}
+		else
+		{
+			gi.centerprintf(ent, "No more apples\n");
+		}
+	}
+	else if (ent->client->seedType == 2)
+	{
+		if (ent->client->pers.bananaSeeds > 0)
+		{
+			ent->client->pers.bananaSeeds--;
+			gi.centerprintf(ent, "Banana seeds left: %i\n", ent->client->pers.bananaSeeds);
+			plantBanana(ent, start, forward, damage, 1000, 6, 20);
+		}
+		else
+		{
+			gi.centerprintf(ent, "No more bananas\n");
+		}
+	}
+	else if (ent->client->seedType == 3)
+	{
+		if (ent->client->pers.cherrySeeds > 0)
+		{
+			ent->client->pers.cherrySeeds;
+			gi.centerprintf(ent, "Cherry seeds left: %i\n", ent->client->pers.cherrySeeds);
+			plantCherry(ent, start, forward, damage, 1000, 6, 20);
+		}
+		else
+		{
+			gi.centerprintf(ent, "No more cherries\n");
+		}
+	}
+	else if (ent->client->seedType == 4)
+	{
+		if (ent->client->ps.stats[DURIAN_SEEDS] > 0)
+		{
+			ent->client->ps.stats[DURIAN_SEEDS]--;
+			gi.centerprintf(ent, "Durian seeds left: %i\n", ent->client->pers.durianSeeds);
+			plantDurian(ent, start, forward, damage, 1000, 6, 20);
+		}
+		else
+		{
+			gi.centerprintf(ent, "No more durians\n");
+		}
+	}
+	else if (ent->client->seedType == 5)
+	{
+		if (ent->client->ps.stats[ELDERBERRY_SEEDS] > 0)
+		{
+			ent->client->ps.stats[ELDERBERRY_SEEDS]--;
+			gi.centerprintf(ent, "Elder berry seeds left: %i\n", ent->client->pers.elderSeeds);
+			plantElder(ent, start, forward, damage, 1000, 6, 20);
+		}
+		else
+		{
+			gi.centerprintf(ent, "No more elder berries\n");
+		}
+	}
+	//fire_blaster (ent, start, forward, damage, 1000, effect, hyper);
 
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
