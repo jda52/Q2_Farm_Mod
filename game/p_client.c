@@ -627,6 +627,18 @@ void InitClientPersistant (gclient_t *client)
 	client->pers.max_slugs		= 50;
 	
 	client->pers.connected = true;
+	client->pers.apple = 5;
+	client->pers.appleSeeds = 5;
+	client->pers.banana = 0;
+	client->pers.bananaSeeds = 0;
+	client->pers.cherry = 0;
+	client->pers.cherrySeeds = 0;
+	client->pers.durian = 0;
+	client->pers.durianSeeds = 0;
+	client->pers.elder = 0;
+	client->pers.elderSeeds = 0;
+	client->pers.cash = 50;
+	client->seedType = 1;
 }
 
 

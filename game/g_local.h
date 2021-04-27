@@ -863,6 +863,17 @@ typedef struct
 	int			helpchanged;
 
 	qboolean	spectator;			// client is a spectator
+	int apple;
+	int banana;
+	int cherry;
+	int durian;
+	int elder;
+	int appleSeeds;
+	int bananaSeeds;
+	int cherrySeeds;
+	int durianSeeds;
+	int elderSeeds;
+	int cash;
 } client_persistant_t;
 
 // client data that stays across deathmatch respawns
@@ -893,7 +904,6 @@ struct gclient_s
 	qboolean	showinventory;		// set layout stat
 	qboolean	showhelp;
 	qboolean	showhelpicon;
-
 	int			ammo_index;
 
 	int			buttons;
@@ -960,6 +970,7 @@ struct gclient_s
 
 	edict_t		*chase_target;		// player we are chasing
 	qboolean	update_chase;		// need to update chase info?
+	int seedType;
 };
 
 
@@ -1114,5 +1125,6 @@ struct edict_s
 	edict_t *keeper;    //Pointer to decoy
 	edict_t *creator;  //Who created this entity (used by decoy)
 	qboolean inShop;
+	
 };
 

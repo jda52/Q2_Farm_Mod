@@ -1003,17 +1003,36 @@ void ClientCommand (edict_t *ent)
 		}
 		else if(buyMenu = true && sellMenu == false)
 		{
-			gi.cprintf(ent, PRINT_HIGH, "Bought Apples\ncash:%i\n", ent->client->ps.stats[CASH]);
+			if (ent->client->pers.cash >= 3)
+			{
+				ent->client->pers.cash -= 3;
+				ent->client->pers.appleSeeds++;
+				gi.cprintf(ent, PRINT_HIGH, "Bought Apples seeds%i\ncash:%i\n", ent->client->pers.appleSeeds, ent->client->pers.cash);
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "Not enough Cash");
+			}
 		}
-		else if (buyMenu = false && sellMenu == true)
+		else 
 		{
-			gi.cprintf(ent, PRINT_HIGH, "Sold Apples\ncash:%i\n", ent->client->ps.stats[CASH]);
+			if (ent->client->pers.apple > 0)
+			{
+				ent->client->pers.cash += 5;
+				ent->client->pers.apple--;
+				gi.cprintf(ent, PRINT_HIGH, "Sold Apples%i\ncash:%i\n", ent->client->pers.apple, ent->client->pers.cash);
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "You do not have this");
+			}
 		}
 	}
 	else if (Q_stricmp(cmd, "2") == 0)
 	{
 		if (ent->inShop == false)
 		{
+			gi.centerprintf(ent,"test");
 			return;
 		}
 		if (buyMenu == false && sellMenu == false)
@@ -1023,11 +1042,29 @@ void ClientCommand (edict_t *ent)
 		}
 		else if (buyMenu = true && sellMenu == false)
 		{
-			gi.cprintf(ent, PRINT_HIGH, "Bought Banana\ncash:%i\n", ent->client->ps.stats[CASH]);
+			if (ent->client->pers.cash >= 6)
+			{
+				ent->client->pers.cash -= 6;
+				ent->client->pers.bananaSeeds++;
+				gi.cprintf(ent, PRINT_HIGH, "Bought Banana seeds %i\ncash:%i\n", ent->client->pers.bananaSeeds, ent->client->pers.cash);
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "Not enough Cash");
+			}
 		}
-		else if (buyMenu = false && sellMenu == true)
+		else 
 		{
-			gi.cprintf(ent, PRINT_HIGH, "Sold Banana\ncash:%i\n", ent->client->ps.stats[CASH]);
+			if (ent->client->pers.banana > 0)
+			{
+				ent->client->pers.cash += 10;
+				ent->client->pers.banana--;
+				gi.cprintf(ent, PRINT_HIGH, "Sold Banana %i\ncash:%i\n", ent->client->pers.banana, ent->client->pers.cash);
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "You do not have this");
+			}
 		}
 	}
 	else if (Q_stricmp(cmd, "3") == 0)
@@ -1038,11 +1075,25 @@ void ClientCommand (edict_t *ent)
 		}
 		if (buyMenu = true && sellMenu == false)
 		{
-			gi.cprintf(ent, PRINT_HIGH, "Bought Cherry\ncash:%i\n", ent->client->ps.stats[CASH]);
+			if (ent->client->pers.cash >= 9)
+			{
+				ent->client->pers.cash -= 9;
+				ent->client->pers.cherrySeeds++;
+				gi.cprintf(ent, PRINT_HIGH, "Bought Cherry seeds %i\ncash: %i\n", ent->client->pers.cherrySeeds, ent->client->pers.cash);
+			}
 		}
-		else if (buyMenu = false && sellMenu == true)
+		else 
 		{
-			gi.cprintf(ent, PRINT_HIGH, "Sold Cherry\ncash:%i\n", ent->client->ps.stats[CASH]);
+			if (ent->client->pers.cherry > 0)
+			{
+				ent->client->pers.cash += 15;
+				ent->client->pers.cherry--;
+				gi.cprintf(ent, PRINT_HIGH, "Sold Cherry %i\ncash:%i\n", ent->client->pers.cherry, ent->client->pers.cash);
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "You do not have this");
+			}
 		}
 	}
 	else if (Q_stricmp(cmd, "4") == 0)
@@ -1053,11 +1104,29 @@ void ClientCommand (edict_t *ent)
 		}
 		else if (buyMenu = true && sellMenu == false)
 		{
-			gi.cprintf(ent, PRINT_HIGH, "Bought Durian\ncash:%i\n", ent->client->ps.stats[CASH]);
+			if (ent->client->pers.cash >= 12)
+			{
+				ent->client->pers.cash -= 12;
+				ent->client->pers.durianSeeds++;
+				gi.cprintf(ent, PRINT_HIGH, "Bought Durian seeds %i\ncash:%i\n", ent->client->pers.durianSeeds, ent->client->pers.cash);
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "Not enough Cash");
+			}
 		}
-		else if (buyMenu = false && sellMenu == true)
+		else 
 		{
-			gi.cprintf(ent, PRINT_HIGH, "Sold Durian\ncash:%i\n", ent->client->ps.stats[CASH]);
+			if (ent->client->pers.durian > 0)
+			{
+				ent->client->pers.cash -= 20;
+				ent->client->pers.durian--;
+				gi.cprintf(ent, PRINT_HIGH, "Sold Durian %i\ncash:%i\n", ent->client->pers.durian, ent->client->pers.cash);
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "You do not have this");
+			}
 		}
 	}
 	else if (Q_stricmp(cmd, "5") == 0)
@@ -1068,24 +1137,66 @@ void ClientCommand (edict_t *ent)
 		}
 		else if (buyMenu = true && sellMenu == false)
 		{
-			gi.cprintf(ent, PRINT_HIGH, "Bought ElderBerry\n cash:%i\n", ent->client->ps.stats[CASH]);
+			if (ent->client->pers.cash >= 15)
+			{
+				ent->client->pers.cash -= 15;
+				ent->client->pers.elderSeeds++;
+				gi.cprintf(ent, PRINT_HIGH, "Bought ElderBerry seeds %i\n cash:%i\n", ent->client->pers.elderSeeds, ent->client->pers.cash);
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "Not enough Cash");
+			}
 		}
-		else if (buyMenu = false && sellMenu == true)
+		else 
 		{
-			gi.cprintf(ent, PRINT_HIGH, "Sold ElderBerry\ncash:%i\n", ent->client->ps.stats[CASH]);
+			if (ent->client->pers.elder > 0)
+			{
+				ent->client->pers.cash += 25;
+				ent->client->pers.elder--;
+				gi.cprintf(ent, PRINT_HIGH, "Sold ElderBerry %i\ncash:%i\n", ent->client->pers.elder, ent->client->pers.cash);
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "You do not have this");
+			}
 		}
 	}
 	else if (Q_stricmp(cmd, "6") == 0)
 	{
-		if (ent->inShop == false)
-		{
-			return;
-		}
-		else
+		if (ent->inShop)
 		{
 			gi.cprintf(ent, PRINT_HIGH, "Please come again\n");
 			ent->inShop = false;
+			buyMenu = false;
+			sellMenu = false;
 		}
+		return;
+	}
+	else if (Q_stricmp(cmd, "apple") == 0)
+	{
+		gi.centerprintf(ent, "Now planting apples");
+		ent->client->seedType = 1;
+	}
+	else if (Q_stricmp(cmd, "banana") == 0)
+	{
+		gi.centerprintf(ent, "Now planting bananas");
+		ent->client->seedType = 2;
+	}
+	else if (Q_stricmp(cmd, "cherry") == 0)
+	{
+		gi.centerprintf(ent, "Now planting cherries");
+		ent->client->seedType = 3;
+	}
+	else if (Q_stricmp(cmd, "durian") == 0)
+	{
+		gi.centerprintf(ent, "Now planting durians");
+		ent->client->seedType = 4;
+	}
+	else if (Q_stricmp(cmd, "elder berry") == 0)
+	{
+		gi.centerprintf(ent, "Now planting elder berries");
+		ent->client->seedType = 5;
 	}
 	else	// anything that doesn't match a command will be a chat
 		Cmd_Say_f (ent, false, true);
