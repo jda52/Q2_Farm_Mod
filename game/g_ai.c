@@ -163,7 +163,7 @@ The monster is walking it's beat
 void ai_walk (edict_t *self, float dist)
 {
 	M_MoveToGoal (self, dist);
-
+	
 	// check for noticing a player
 	if (FindTarget (self))
 		return;
@@ -410,7 +410,7 @@ qboolean FindTarget (edict_t *self)
 	qboolean	heardit;
 	int			r;
 
-	if (self->monsterinfo.aiflags & AI_GOOD_GUY)
+	if (self->monsterinfo.aiflags & AI_GOOD_GUY || self->isAlly)
 	{
 		if (self->goalentity && self->goalentity->inuse && self->goalentity->classname)
 		{
@@ -458,7 +458,7 @@ qboolean FindTarget (edict_t *self)
 		if (!client)
 			return false;	// no clients to get mad at
 	}
-
+	
 	// if the entity went away, forget it
 	if (!client->inuse)
 		return false;
@@ -1114,4 +1114,57 @@ void ai_run (edict_t *self, float dist)
 
 	if (self)
 		self->goalentity = save;
+}
+
+void ai_makeAlly(edict_t *self, edict_t* user)
+{
+	edict_t* ally;
+	vec3_t forward, right, up;
+
+	if ((self->svflags & SVF_MONSTER))
+	{
+		ally = G_Spawn();
+
+		AngleVectors(user->client->v_angle, forward, right, up);
+		VectorMA(user->s.origin, 100, forward, ally->s.origin);
+		
+		VectorSet(self->mins, -16, -16, -24);
+		VectorSet(self->maxs, 16, 16, 32);
+
+		ally->isAlly = true;
+		ally->s.modelindex = self->s.modelindex;
+		ally->monsterinfo.scale = self->monsterinfo.scale;
+		ally->mass = self->mass;
+		ally->clipmask = self->clipmask;
+
+		ally->movetype = self->movetype;
+		ally->solid = self->solid;
+		ally->monsterinfo.aiflags &= AI_GOOD_GUY;
+		ally->mass = self->mass;
+		ally->monsterinfo.stand = self->monsterinfo.stand;
+		ally->monsterinfo.walk = self->monsterinfo.walk;
+		ally->monsterinfo.run = self->monsterinfo.run;
+		ally->monsterinfo.dodge = self->monsterinfo.dodge;
+		ally->monsterinfo.attack = self->monsterinfo.attack;
+		ally->monsterinfo.melee = self->monsterinfo.melee;
+		ally->monsterinfo.sight = self->monsterinfo.sight;
+		ally->target = NULL;
+		ally->enemy = NULL;
+		ally->s.skinnum = self->s.skinnum;
+		ally->classname = self->classname;
+
+		ally->health = self->health;
+		ally->max_health = self->max_health;
+
+
+		gi.linkentity(ally);
+
+		ally->monsterinfo.stand(ally);
+
+		walkmonster_start(ally);
+		//self->isAlly = true;
+		//M_ReactToDamage(self, user);
+		//self->pain(self, user, 8, 0);
+		//self->flags &= ~(FL_FLY | FL_SWIM);
+	}
 }

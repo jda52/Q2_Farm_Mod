@@ -1,4 +1,4 @@
-﻿Build started 4/27/2021 11:17:15 AM.
+﻿Build started 4/27/2021 1:52:32 PM.
      1>Project "C:\Git\IT_266\Quake2Modding\Farm Mod\quake2-3.21\ctf\ctf.vcxproj" on node 2 (Build target(s)).
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(1186,5): warning MSB8012: TargetPath(C:\Git\IT_266\Quake2Modding\Farm Mod\quake2-3.21\ctf\.\release\ctf.dll) does not match the Linker's OutputFile property value (C:\Git\IT_266\Quake2Modding\Farm Mod\quake2-3.21\ctf\release\gamex86.dll). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(1188,5): warning MSB8012: TargetName(ctf) does not match the Linker's OutputFile property value (gamex86). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
@@ -35,4 +35,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.58
+Time Elapsed 00:00:00.56

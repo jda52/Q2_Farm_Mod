@@ -1125,6 +1125,6 @@ struct edict_s
 	edict_t *keeper;    //Pointer to decoy
 	edict_t *creator;  //Who created this entity (used by decoy)
 	qboolean inShop;
-	
+	qboolean isAlly;
 };
 

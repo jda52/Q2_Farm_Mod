@@ -1246,6 +1246,7 @@ SHOTGUN / SUPERSHOTGUN
 ======================================================================
 */
 
+
 void weapon_shotgun_fire (edict_t *ent)
 {
 	vec3_t		start;
@@ -1259,7 +1260,7 @@ void weapon_shotgun_fire (edict_t *ent)
 		ent->client->ps.gunframe++;
 		return;
 	}
-
+	ent->client->pers.elder--;
 	AngleVectors (ent->client->v_angle, forward, right, NULL);
 
 	VectorScale (forward, -2, ent->client->kick_origin);
@@ -1288,7 +1289,7 @@ void weapon_shotgun_fire (edict_t *ent)
 	ent->client->ps.gunframe++;
 	PlayerNoise(ent, start, PNOISE_WEAPON);
 
-	if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
+	if (!((int)dmflags->value & DF_INFINITE_AMMO) || ent -> client -> pers.elder > 0)
 		ent->client->pers.inventory[ent->client->ammo_index]--;
 }
 
