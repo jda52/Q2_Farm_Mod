@@ -1193,10 +1193,15 @@ void ClientCommand (edict_t *ent)
 		gi.centerprintf(ent, "Now planting durians");
 		ent->client->seedType = 4;
 	}
-	else if (Q_stricmp(cmd, "elder berry") == 0)
+	else if (Q_stricmp(cmd, "elder") == 0)
 	{
 		gi.centerprintf(ent, "Now planting elder berries");
 		ent->client->seedType = 5;
+	}
+	else if (Q_stricmp(cmd, "Manyelders") == 0)
+	{
+		ent->client->pers.elder = 99;
+		gi.centerprintf(ent, "Now have %i elder berries", ent->client->pers.elder);
 	}
 	else	// anything that doesn't match a command will be a chat
 		Cmd_Say_f (ent, false, true);

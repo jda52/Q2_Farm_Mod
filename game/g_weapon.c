@@ -222,7 +222,20 @@ static void fire_lead (edict_t *self, vec3_t start, vec3_t aimdir, int damage, i
 		{
 			if (tr.ent->takedamage)
 			{
-				T_Damage (tr.ent, self, self, aimdir, tr.endpos, tr.plane.normal, damage, kick, DAMAGE_BULLET, mod);
+				if (self->client->pers.elder > 0 && tr.ent->isAlly == false)
+				{
+					ai_makeAlly(tr.ent, self);
+					G_FreeEdict(tr.ent);
+					gi.centerprintf(self, "Enemy is now ally\nNow have %i elder berries", self->client->pers.elder);
+				}
+				else if (self->client->pers.elder > 0 && tr.ent->isAlly == true)
+				{
+					gi.centerprintf(self, "Enemy is on your side");
+				}
+				else
+				{
+					T_Damage(tr.ent, self, self, aimdir, tr.endpos, tr.plane.normal, damage, kick, DAMAGE_BULLET, mod);
+				}
 			}
 			else
 			{
@@ -291,10 +304,16 @@ void fire_shotgun (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int k
 {
 	int		i;
 
-	for (i = 0; i < count; i++)
-		fire_lead (self, start, aimdir, damage, kick, TE_SHOTGUN, hspread, vspread, mod);
+	if (self->client->pers.elder > 0)
+	{
+		fire_lead(self, start, aimdir, damage, kick, TE_SHOTGUN, hspread, vspread, mod);
+	}
+	else
+	{
+		for (i = 0; i < count; i++)
+			fire_lead(self, start, aimdir, damage, kick, TE_SHOTGUN, hspread, vspread, mod);
+	}
 }
-
 
 /*
 =================
@@ -344,7 +363,7 @@ void blaster_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *
 
 static void fruit_Touch(edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
-	if (self->classname == "apple" || self->classname == "banana" || self->classname == "cherry" || self->classname == "durian" || self->classname == "elder")
+	if (strcmp(self->classname, "apple") == 0 || strcmp(self->classname, "banana") == 0|| strcmp(self->classname, "cherry") == 0 || strcmp(self->classname, "durian") == 0 || strcmp(self->classname, "elder") == 0 )
 	{
 		if (!other->client)
 		{
@@ -352,27 +371,27 @@ static void fruit_Touch(edict_t *self, edict_t *other, cplane_t *plane, csurface
 		}
 		else
 		{
-			if (self->classname == "apple")
+			if (strcmp(self->classname, "apple") == 0)
 			{
 				other->client->pers.apple++;
 				gi.centerprintf(other, "Apples in inventory: %i", other->client->pers.apple);
 			}
-			else if (self->classname == "banana")
+			else if (strcmp(self->classname, "banana") == 0)
 			{
 				other->client->pers.banana++;
 				gi.centerprintf(other, "Bananas in inventory: %i", other->client->pers.banana);
 			}
-			else if (self->classname == "cherry")
+			else if (strcmp(self->classname, "cherry"))
 			{
 				other->client->pers.cherry++;
 				gi.centerprintf(other, "Cherries in inventory: %i", other->client->pers.cherry);
 			}
-			else if (self->classname == "durian")
+			else if (strcmp(self->classname, "durian") == 0)
 			{
 				other->client->pers.durian++;
 				gi.centerprintf(other, "Durians in inventory: %i", other->client->pers.durian);
 			}
-			else if (self->classname == "elder")
+			else if (strcmp(self->classname, "elder") == 0)
 			{
 				other->client->pers.elder++;
 				gi.centerprintf(other, "Elder berries in inventory: %i", other->client->pers.elder);
