@@ -315,6 +315,7 @@ mmove_t soldier_move_run = {FRAME_run03, FRAME_run08, soldier_frames_run, NULL};
 
 void soldier_run (edict_t *self)
 {
+	self->inAttack = false;
 	if (self->monsterinfo.aiflags & AI_STAND_GROUND)
 	{
 		self->monsterinfo.currentmove = &soldier_move_stand1;
@@ -776,6 +777,7 @@ mmove_t soldier_move_attack6 = {FRAME_runs01, FRAME_runs14, soldier_frames_attac
 
 void soldier_attack(edict_t *self)
 {
+	self->inAttack = true;
 	if (self->s.skinnum < 4)
 	{
 		if (random() < 0.5)
@@ -1211,7 +1213,7 @@ void SP_monster_soldier_x (edict_t *self)
 	VectorSet (self->maxs, 16, 16, 32);
 	self->movetype = MOVETYPE_STEP;
 	self->solid = SOLID_BBOX;
-
+	self->inAttack = false;
 	sound_idle =	gi.soundindex ("soldier/solidle1.wav");
 	sound_sight1 =	gi.soundindex ("soldier/solsght1.wav");
 	sound_sight2 =	gi.soundindex ("soldier/solsrch1.wav");

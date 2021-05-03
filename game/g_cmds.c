@@ -1001,7 +1001,7 @@ void ClientCommand (edict_t *ent)
 			buyMenu = true;
 			Buy(ent);
 		}
-		else if(buyMenu = true && sellMenu == false)
+		else if(buyMenu == true && sellMenu == false)
 		{
 			if (ent->client->pers.cash >= 3)
 			{
@@ -1040,7 +1040,7 @@ void ClientCommand (edict_t *ent)
 			sellMenu = true;
 			Sell(ent);
 		}
-		else if (buyMenu = true && sellMenu == false)
+		else if (buyMenu == true && sellMenu == false)
 		{
 			if (ent->client->pers.cash >= 6)
 			{
@@ -1073,7 +1073,7 @@ void ClientCommand (edict_t *ent)
 		{
 			return;
 		}
-		if (buyMenu = true && sellMenu == false)
+		if (buyMenu == true && sellMenu == false)
 		{
 			if (ent->client->pers.cash >= 9)
 			{
@@ -1102,7 +1102,7 @@ void ClientCommand (edict_t *ent)
 		{
 			return;
 		}
-		else if (buyMenu = true && sellMenu == false)
+		else if (buyMenu == true && sellMenu == false)
 		{
 			if (ent->client->pers.cash >= 12)
 			{
@@ -1135,7 +1135,7 @@ void ClientCommand (edict_t *ent)
 		{
 			return;
 		}
-		else if (buyMenu = true && sellMenu == false)
+		else if (buyMenu == true && sellMenu == false)
 		{
 			if (ent->client->pers.cash >= 15)
 			{

@@ -222,10 +222,11 @@ static void fire_lead (edict_t *self, vec3_t start, vec3_t aimdir, int damage, i
 		{
 			if (tr.ent->takedamage)
 			{
-				if (self->client->pers.elder > 0 && tr.ent->isAlly == false)
+				if (self->client->pers.elder > 0 && tr.ent->isAlly == false && tr.ent->inAttack == false)
 				{
-					ai_makeAlly(tr.ent, self);
-					G_FreeEdict(tr.ent);
+					allyChange(tr.ent);
+					//ai_makeAlly(tr.ent, self);
+					//G_FreeEdict(tr.ent);
 					gi.centerprintf(self, "Enemy is now ally\nNow have %i elder berries", self->client->pers.elder);
 				}
 				else if (self->client->pers.elder > 0 && tr.ent->isAlly == true)
@@ -315,6 +316,126 @@ void fire_shotgun (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int k
 	}
 }
 
+void harvest(edict_t *self, vec3_t start, vec3_t aimdir, int hspread, int vspread)
+{
+	trace_t		tr;
+	vec3_t		dir;
+	vec3_t		forward, right, up;
+	vec3_t		end;
+	float		r;
+	float		u;
+	float		ri;
+	vec3_t		water_start;
+	qboolean	water = false;
+	int			content_mask = MASK_SHOT | MASK_WATER;
+
+	tr = gi.trace(self->s.origin, NULL, NULL, start, self, MASK_SHOT);
+	if (!(tr.fraction < 1.0))
+	{
+		vectoangles(aimdir, dir);
+		AngleVectors(dir, forward, right, up);
+
+		r = crandom()*hspread;
+		u = crandom()*vspread;
+		VectorMA(start, 8192, forward, end);
+		VectorMA(end, r, right, end);
+		VectorMA(end, u, up, end);
+
+		if (gi.pointcontents(start) & MASK_WATER)
+		{
+			water = true;
+			VectorCopy(start, water_start);
+			content_mask &= ~MASK_WATER;
+		}
+
+		tr = gi.trace(start, NULL, NULL, end, self, content_mask);
+
+		// see if we hit water
+		if (tr.contents & MASK_WATER)
+		{
+			int		color;
+
+			water = true;
+			VectorCopy(tr.endpos, water_start);
+
+			if (!VectorCompare(start, tr.endpos))
+			{
+				if (tr.contents & CONTENTS_WATER)
+				{
+					if (strcmp(tr.surface->name, "*brwater") == 0)
+						color = SPLASH_BROWN_WATER;
+					else
+						color = SPLASH_BLUE_WATER;
+				}
+				else if (tr.contents & CONTENTS_SLIME)
+					color = SPLASH_SLIME;
+				else if (tr.contents & CONTENTS_LAVA)
+					color = SPLASH_LAVA;
+				else
+					color = SPLASH_UNKNOWN;
+
+				if (color != SPLASH_UNKNOWN)
+				{
+					gi.WriteByte(svc_temp_entity);
+					gi.WriteByte(TE_SPLASH);
+					gi.WriteByte(8);
+					gi.WritePosition(tr.endpos);
+					gi.WriteDir(tr.plane.normal);
+					gi.WriteByte(color);
+					gi.multicast(tr.endpos, MULTICAST_PVS);
+				}
+
+				// change bullet's course when it enters water
+				VectorSubtract(end, start, dir);
+				vectoangles(dir, dir);
+				AngleVectors(dir, forward, right, up);
+				r = crandom()*hspread * 2;
+				u = crandom()*vspread * 2;
+				VectorMA(water_start, 8192, forward, end);
+				VectorMA(end, r, right, end);
+				VectorMA(end, u, up, end);
+			}
+
+			// re-trace ignoring water this time
+			tr = gi.trace(water_start, NULL, NULL, end, self, MASK_SHOT);
+		}
+	}
+	if (!((tr.surface) && (tr.surface->flags & SURF_SKY)))
+	{
+		if (tr.fraction < 1.0)
+		{
+			if (tr.ent->isAlly)
+			{
+				ri = random();
+				if (ri < 0.3)
+				{
+					self->client->pers.appleSeeds++;
+					gi.centerprintf(self, "You received an apple seed\nYou now have %i apple seeds\n", self->client->pers.appleSeeds);
+				}
+				else if (ri < 0.6)
+				{
+					self->client->pers.bananaSeeds++;
+					gi.centerprintf(self, "You received an banana seed\nYou now have %i banana seeds\n", self->client->pers.bananaSeeds);
+				}
+				else if (ri < 0.75)
+				{
+					self->client->pers.cherrySeeds++;
+					gi.centerprintf(self, "You received a cherry seed\nYou now have %i cherry seeds\n", self->client->pers.cherrySeeds);
+				}
+				else if (ri < 0.9)
+				{
+					self->client->pers.durianSeeds++;
+					gi.centerprintf(self, "You received a durian seed\nYou now have %i durian seeds\n", self->client->pers.durianSeeds);
+				}
+				else
+				{
+					self->client->pers.elderSeeds++;
+					gi.centerprintf(self, "You received an elder seed\nYou now have %i elder berry seeds\n", self->client->pers.elderSeeds);
+				}
+			}
+		}
+	}
+}
 /*
 =================
 fire_blaster
@@ -363,6 +484,8 @@ void blaster_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *
 
 static void fruit_Touch(edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
+	plane = NULL;
+	surf = NULL;
 	if (strcmp(self->classname, "apple") == 0 || strcmp(self->classname, "banana") == 0|| strcmp(self->classname, "cherry") == 0 || strcmp(self->classname, "durian") == 0 || strcmp(self->classname, "elder") == 0 )
 	{
 		if (!other->client)
@@ -399,6 +522,19 @@ static void fruit_Touch(edict_t *self, edict_t *other, cplane_t *plane, csurface
 		}
 		G_FreeEdict(self);
 	}
+	else if (strcmp(self->classname, "apple_seed") == 0 || strcmp(self->classname, "banana_seed") == 0 || strcmp(self->classname, "cherry_seed") == 0 || strcmp(self->classname, "durian_seed") == 0 || strcmp(self->classname, "elder_seed") == 0)
+	{
+		if ((strcmp(other->classname, "water") != 0))
+		{
+			gi.centerprintf(other, "Cannot pick up yet");
+			return;
+		}
+		else
+		{
+			self->delay -= 20;
+			G_FreeEdict(other);
+		}
+	}
 	return;
 }
 void grownApple(edict_t*self)
@@ -412,7 +548,7 @@ void grownApple(edict_t*self)
 	self->nextthink = level.time + 1;
 	return;
 }
-void plantApple(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius)
+void plantApple(edict_t *self, vec3_t start, vec3_t aimdir, float timer)
 {
 	edict_t	*apple;
 	vec3_t	dir;
@@ -423,16 +559,18 @@ void plantApple(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int spee
 
 	apple = G_Spawn();
 	VectorCopy(start, apple->s.origin);
-	VectorScale(aimdir, speed, apple->velocity);
-	VectorMA(apple->velocity, 200 + crandom() * 10.0, up, apple->velocity);
-	VectorMA(apple->velocity, crandom() * 10.0, right, apple->velocity);
-	VectorSet(apple->avelocity, 300, 300, 300);
-	apple->movetype = MOVETYPE_NONE;
+	VectorScale(aimdir, 0, apple->velocity);
+	VectorMA(apple->velocity, 0, up, apple->velocity);
+	VectorMA(apple->velocity, 0, right, apple->velocity);
+	VectorSet(apple->mins, -16, -16, -24);
+	VectorSet(apple->maxs, 16, 16, 32);
+	VectorSet(apple->avelocity, 0, 0, 0);
+	apple->movetype = MOVETYPE_FLY;
 	apple->clipmask = MASK_SHOT;
 	apple->solid = SOLID_TRIGGER;
 	apple->s.effects |= EF_GRENADE;
-	VectorClear(apple->mins);
-	VectorClear(apple->maxs);
+	//VectorClear(apple->mins);
+	//VectorClear(apple->maxs);
 	apple->s.modelindex = gi.modelindex("models/objects/grenade/tris.md2");
 	apple->owner = self;
 	apple->touch = fruit_Touch;
@@ -456,7 +594,7 @@ void grownBanana(edict_t*self)
 	self->nextthink = level.time + 1;
 	return;
 }
-void plantBanana(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius)
+void plantBanana(edict_t *self, vec3_t start, vec3_t aimdir, float timer)
 {
 	edict_t	*banana;
 	vec3_t	dir;
@@ -467,16 +605,18 @@ void plantBanana(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int spe
 
 	banana = G_Spawn();
 	VectorCopy(start, banana->s.origin);
-	VectorScale(aimdir, speed, banana->velocity);
-	VectorMA(banana->velocity, 200 + crandom() * 10.0, up, banana->velocity);
-	VectorMA(banana->velocity, crandom() * 10.0, right, banana->velocity);
-	VectorSet(banana->avelocity, 300, 300, 300);
-	banana->movetype = MOVETYPE_NONE;
+	VectorScale(aimdir, 0, banana->velocity);
+	VectorMA(banana->velocity, 0, up, banana->velocity);
+	VectorMA(banana->velocity, 0, right, banana->velocity);
+	VectorSet(banana->mins, -16, -16, -24);
+	VectorSet(banana->maxs, 16, 16, 32);
+	VectorSet(banana->avelocity, 0, 0, 0);
+	banana->movetype = MOVETYPE_FLY;
 	banana->clipmask = MASK_SHOT;
 	banana->solid = SOLID_TRIGGER;
 	banana->s.effects |= EF_GRENADE;
-	VectorClear(banana->mins);
-	VectorClear(banana->maxs);
+	//VectorClear(banana->mins);
+	//VectorClear(banana->maxs);
 	banana->s.modelindex = gi.modelindex("models/items/ammo/shells/medium/tris.md2");
 	banana->owner = self;
 	banana->touch = fruit_Touch;
@@ -499,7 +639,7 @@ void grownCherry(edict_t*self)
 	self->nextthink = level.time + 1;
 	return;
 }
-void plantCherry(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius)
+void plantCherry(edict_t *self, vec3_t start, vec3_t aimdir, float timer)
 {
 	edict_t	*cherry;
 	vec3_t	dir;
@@ -510,16 +650,18 @@ void plantCherry(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int spe
 
 	cherry = G_Spawn();
 	VectorCopy(start, cherry->s.origin);
-	VectorScale(aimdir, speed, cherry->velocity);
-	VectorMA(cherry->velocity, 200 + crandom() * 10.0, up, cherry->velocity);
-	VectorMA(cherry->velocity, crandom() * 10.0, right, cherry->velocity);
-	VectorSet(cherry->avelocity, 300, 300, 300);
-	cherry->movetype = MOVETYPE_NONE;
+	VectorScale(aimdir, 0, cherry->velocity);
+	VectorMA(cherry->velocity, 0, up, cherry->velocity);
+	VectorMA(cherry->velocity, 0, right, cherry->velocity);
+	VectorSet(cherry->mins, -16, -16, -24);
+	VectorSet(cherry->maxs, 16, 16, 32);
+	VectorSet(cherry->avelocity, 0, 0, 0);
+	cherry->movetype = MOVETYPE_FLY;
 	cherry->clipmask = MASK_SHOT;
 	cherry->solid = SOLID_TRIGGER;
 	cherry->s.effects |= EF_GRENADE;
-	VectorClear(cherry->mins);
-	VectorClear(cherry->maxs);
+	//VectorClear(cherry->mins);
+	//VectorClear(cherry->maxs);
 	cherry->s.modelindex = gi.modelindex("models/items/ammo/bullets/medium/tris.md2");
 	cherry->owner = self;
 	cherry->touch = fruit_Touch;
@@ -541,7 +683,7 @@ void grownDurian(edict_t*self)
 	self->nextthink = level.time + 1;
 	return;
 }
-void plantDurian(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius)
+void plantDurian(edict_t *self, vec3_t start, vec3_t aimdir, float timer)
 {
 	edict_t	*durian;
 	vec3_t	dir;
@@ -552,16 +694,18 @@ void plantDurian(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int spe
 
 	durian = G_Spawn();
 	VectorCopy(start, durian->s.origin);
-	VectorScale(aimdir, speed, durian->velocity);
-	VectorMA(durian->velocity, 200 + crandom() * 10.0, up, durian->velocity);
-	VectorMA(durian->velocity, crandom() * 10.0, right, durian->velocity);
-	VectorSet(durian->avelocity, 300, 300, 300);
-	durian->movetype = MOVETYPE_NONE;
+	VectorScale(aimdir, 0, durian->velocity);
+	VectorMA(durian->velocity, 0, up, durian->velocity);
+	VectorMA(durian->velocity, 0, right, durian->velocity);
+	VectorSet(durian->mins, -16, -16, -24);
+	VectorSet(durian->maxs, 16, 16, 32);
+	VectorSet(durian->avelocity, 0, 0, 0);
+	durian->movetype = MOVETYPE_FLY;
 	durian->clipmask = MASK_SHOT;
 	durian->solid = SOLID_TRIGGER;
 	durian->s.effects |= EF_GRENADE;
-	VectorClear(durian->mins);
-	VectorClear(durian->maxs);
+	//VectorClear(durian->mins);
+	//VectorClear(durian->maxs);
 	durian->s.modelindex = gi.modelindex("models/items/ammo/cells/medium/tris.md2");
 	durian->owner = self;
 	durian->touch = fruit_Touch;
@@ -583,7 +727,7 @@ void grownElder(edict_t*self)
 	self->nextthink = level.time + 1;
 	return;
 }
-void plantElder(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius)
+void plantElder(edict_t *self, vec3_t start, vec3_t aimdir, float timer)
 {
 	edict_t	*elder;
 	vec3_t	dir;
@@ -594,16 +738,18 @@ void plantElder(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int spee
 
 	elder = G_Spawn();
 	VectorCopy(start, elder->s.origin);
-	VectorScale(aimdir, speed, elder->velocity);
-	VectorMA(elder->velocity, 200 + crandom() * 10.0, up, elder->velocity);
-	VectorMA(elder->velocity, crandom() * 10.0, right, elder->velocity);
-	VectorSet(elder->avelocity, 300, 300, 300);
-	elder->movetype = MOVETYPE_NONE;
+	VectorScale(aimdir, 0, elder->velocity);
+	VectorMA(elder->velocity, 0, up, elder->velocity);
+	VectorMA(elder->velocity, 0, right, elder->velocity);
+	VectorSet(elder->mins, -16, -16, -24);
+	VectorSet(elder->maxs, 16, 16, 32);
+	VectorSet(elder->avelocity, 0, 0, 0);
+	elder->movetype = MOVETYPE_FLY;
 	elder->clipmask = MASK_SHOT;
 	elder->solid = SOLID_TRIGGER;
 	elder->s.effects |= EF_GRENADE;
-	VectorClear(elder->mins);
-	VectorClear(elder->maxs);
+	//VectorClear(elder->mins);
+	//VectorClear(elder->maxs);
 	elder->s.modelindex = gi.modelindex("models/items/ammo/rockets/medium/tris.md2");
 	elder->owner = self;
 	elder->touch = fruit_Touch;
@@ -756,6 +902,25 @@ static void Grenade_Touch (edict_t *ent, edict_t *other, cplane_t *plane, csurfa
 	Grenade_Explode (ent);
 }
 
+static void Build_Touch(edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf)
+{
+	if (other == ent->owner)
+		return;
+
+	if (surf && (surf->flags & SURF_SKY))
+	{
+		G_FreeEdict(ent);
+		return;
+	}
+
+	if (!other->takedamage)
+	{
+		SP_sprinkler(ent);
+		G_FreeEdict(ent);
+		return;
+	}
+
+}
 void fire_grenade (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius)
 {
 	edict_t	*grenade;
@@ -779,7 +944,7 @@ void fire_grenade (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int s
 	VectorClear (grenade->maxs);
 	grenade->s.modelindex = gi.modelindex ("models/objects/grenade/tris.md2");
 	grenade->owner = self;
-	grenade->touch = Grenade_Touch;
+	grenade->touch = Build_Touch;
 	grenade->nextthink = level.time + timer;
 	grenade->think = Grenade_Explode;
 	grenade->dmg = damage;
@@ -987,6 +1152,57 @@ void fire_rail (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick
 		PlayerNoise(self, tr.endpos, PNOISE_IMPACT);
 }
 
+void touch_water(edict_t *ent, edict_t *other)
+{
+	if (strcmp(other->classname, "apple_seed") == 0 || strcmp(other->classname, "banana_seed") == 0 || strcmp(other->classname, "cherry_seed") == 0 || strcmp(other->classname, "durian_seed") == 0 || strcmp(other->classname, "elder_seed") == 0)
+	{
+		fruit_Touch(other, ent, NULL, NULL);
+	}
+}
+void fire_water(edict_t *self, vec3_t start, vec3_t dir, int speed, int effect)
+{
+	edict_t	*water;
+	trace_t	tr;
+
+	VectorNormalize(dir);
+
+	water = G_Spawn();
+	water->svflags = SVF_DEADMONSTER;
+	// yes, I know it looks weird that projectiles are deadmonsters
+	// what this means is that when prediction is used against the object
+	// (blaster/hyperblaster shots), the player won't be solid clipped against
+	// the object.  Right now trying to run into a firing hyperblaster
+	// is very jerky since you are predicted 'against' the shots.
+	VectorCopy(start, water->s.origin);
+	VectorCopy(start, water->s.old_origin);
+	vectoangles(dir, water->s.angles);
+	VectorScale(dir, speed, water->velocity);
+	water->movetype = MOVETYPE_FLYMISSILE;
+	water->clipmask = MASK_SHOT;
+	water->solid = SOLID_BBOX;
+	water->s.effects |= effect;
+	VectorClear(water->mins);
+	VectorClear(water->maxs);
+	//VectorSet(water->mins, -16, -16, -24);
+	//VectorSet(water->maxs, 16, 16, 32);
+
+	water->s.modelindex = gi.modelindex("models/objects/laser/tris.md2");
+	water->s.sound = gi.soundindex("misc/lasfly.wav");
+	water->owner = self;
+	water->touch = blaster_touch;
+	water->nextthink = level.time + 2;
+	water->think = G_FreeEdict;
+	water->classname = "water";
+	
+	gi.linkentity(water);
+
+	tr = gi.trace(self->s.origin, NULL, NULL, water->s.origin, water, MASK_SHOT);
+	if (tr.fraction < 1.0)
+	{
+		VectorMA(water->s.origin, -10, dir, water->s.origin);
+		water->touch(water, tr.ent, NULL, NULL);
+	}
+}
 
 /*
 =================
