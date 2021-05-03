@@ -210,7 +210,7 @@ mframe_t NPC_frames_pain2[] =
 };
 mmove_t NPC_move_pain2 = { FRAME_pain201, FRAME_pain210, NPC_frames_pain2, NPC_run };
 
-void NPC_pain(edict_t *self, edict_t *other, float kick, int damage)
+void NPC_pain(edict_t *self)
 {
 	int		n;
 
@@ -237,9 +237,24 @@ void NPC_pain(edict_t *self, edict_t *other, float kick, int damage)
 		gi.sound(self, CHAN_VOICE, sound_pain2, 1, ATTN_NORM, 0);
 	}
 }
+void sprinkle(edict_t *self)
+{
+	vec3_t	start;
+	vec3_t	forward, right;
 
+	AngleVectors(self->s.angles, forward, right, NULL);
+	G_ProjectSource(self->s.origin, monster_flash_offset[MZ2_SOLDIER_BLASTER_1], forward, right, start);
 
-void NPC_sight(edict_t *self, edict_t *other)
+	if (level.time > self->delay)
+	{
+		fire_water(self, start, forward, 500, EF_BLASTER);
+	}
+	self->think = sprinkle;
+	self->nextthink = level.time + 1;
+	
+}
+
+void NPC_sight(edict_t *self)
 {
 	gi.sound(self, CHAN_BODY, sound_sight, 1, ATTN_NORM, 0);
 }
@@ -295,7 +310,7 @@ mframe_t NPC_frames_death3[] =
 mmove_t NPC_move_death3 = { FRAME_death301, FRAME_death309, NPC_frames_death3, NPC_dead };
 
 
-void NPC_die(edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, vec3_t point)
+void NPC_die(edict_t *self, int damage)
 {
 	int		n;
 
@@ -344,7 +359,7 @@ void Sell(edict_t *ent)
 	gi.centerprintf(ent, "Sell\n 1.Apple-5\n 2.Banana-10\n 3.Cherry-15\n 4.Durian-20\n 5.ElderBerry-25\nCash: %i", ent->client->ps.stats[CASH]);
 }
 
-void Touch_Shop(edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf)
+void Touch_Shop(edict_t *other)
 {
 	if (!other->client)
 		return;
@@ -359,14 +374,13 @@ void SP_monster_NPC(edict_t *owner)
 	edict_t *self;
 	vec3_t forward;
 
+	self = G_Spawn();
 
 	if (deathmatch->value)
 	{
 		G_FreeEdict(self);
 		return;
 	}
-
-	self = G_Spawn();
 
 	sound_pain1 = gi.soundindex("infantry/infpain1.wav");
 	sound_pain2 = gi.soundindex("infantry/infpain2.wav");
@@ -397,8 +411,8 @@ void SP_monster_NPC(edict_t *owner)
 	self->gib_health = -40;
 	self->mass = 200;
 	self->touch = Touch_Shop;
-	self->pain = NPC_pain;
-	self->die = NPC_die;
+	//self->pain = NPC_pain;
+	//self->die = NPC_die;
 
 	self->monsterinfo.stand = NPC_stand;
 	self->monsterinfo.walk = NULL;
@@ -407,6 +421,52 @@ void SP_monster_NPC(edict_t *owner)
 	self->monsterinfo.sight = NULL;
 	self->monsterinfo.idle = NPC_fidget;
 	
+	gi.linkentity(self);
+
+	self->monsterinfo.currentmove = &NPC_move_stand;
+	self->monsterinfo.scale = MODEL_SCALE;
+
+}
+void SP_sprinkler(edict_t *ent)
+{
+	edict_t *self;
+	vec3_t forward,up;
+	int timer = 5;
+	self = G_Spawn();
+
+	if (deathmatch->value)
+	{
+		G_FreeEdict(self);
+		return;
+	}
+
+	AngleVectors(ent->s.angles, NULL, NULL, up);
+	VectorMA(ent->s.origin, 100, up, self->s.origin);
+
+
+	self->classname = "monster_NPC";
+	self->movetype = MOVETYPE_STEP;
+	self->solid = SOLID_BBOX;
+	self->s.modelindex = gi.modelindex("models/monsters/infantry/tris.md2");
+	VectorSet(self->mins, -16, -16, -24);
+	VectorSet(self->maxs, 16, 16, 32);
+
+	self->health = 1000;
+	self->gib_health = -40;
+	self->mass = 200;
+	
+	//self->pain = NPC_pain;
+	//self->die = NPC_die;
+
+	self->monsterinfo.stand = NPC_stand;
+	self->monsterinfo.walk = NULL;
+	self->monsterinfo.run = NULL;
+	self->monsterinfo.melee = NULL;
+	self->monsterinfo.sight = NULL;
+	self->monsterinfo.idle = NPC_fidget;
+	self->nextthink = level.time + timer;
+	self->think = sprinkle;
+	self->delay = level.time + 10;
 	gi.linkentity(self);
 
 	self->monsterinfo.currentmove = &NPC_move_stand;

@@ -1,4 +1,3 @@
-c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\m_berserk.obj
 c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\m_actor.obj
 c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\g_weapon.obj
 c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\g_utils.obj
@@ -9,6 +8,7 @@ c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\g_svcmds.obj
 c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\g_spawn.obj
 c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\g_save.obj
 c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\g_phys.obj
+c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\m_npc.obj
 c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\g_monster.obj
 c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\g_misc.obj
 c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\g_main.obj
@@ -18,7 +18,6 @@ c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\g_combat.obj
 c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\g_cmds.obj
 c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\g_chase.obj
 c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\g_ai.obj
-c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\m_soldier.obj
 c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\m_parasite.obj
 c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\m_mutant.obj
 c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\m_move.obj
@@ -38,6 +37,7 @@ c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\m_boss32.obj
 c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\m_boss31.obj
 c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\m_boss3.obj
 c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\m_boss2.obj
+c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\m_berserk.obj
 c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\q_shared.obj
 c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\p_weapon.obj
 c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\p_view.obj
@@ -46,9 +46,7 @@ c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\p_hud.obj
 c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\p_client.obj
 c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\m_tank.obj
 c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\m_supertank.obj
-c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\m_npc.obj
-c:\git\it_266\quake2modding\farm mod\quake2-3.21\release\gamex86.lib
-c:\git\it_266\quake2modding\farm mod\quake2-3.21\release\gamex86.exp
+c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\m_soldier.obj
 c:\program files (x86)\steam\steamapps\common\quake 2\farmmod\gamex86.dll
 c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\..\..\..\..\..\..\program files (x86)\steam\steamapps\common\quake 2\farmmod\gamex86.dll
 c:\git\it_266\quake2modding\farm mod\quake2-3.21\game\release\game.tlog\cl.command.1.tlog
