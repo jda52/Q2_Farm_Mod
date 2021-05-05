@@ -407,31 +407,22 @@ void harvest(edict_t *self, vec3_t start, vec3_t aimdir, int hspread, int vsprea
 			if (tr.ent->isAlly)
 			{
 				ri = random();
-				if (ri < 0.3)
+				if (ri < 0.33)
 				{
-					self->client->pers.appleSeeds++;
-					gi.centerprintf(self, "You received an apple seed\nYou now have %i apple seeds\n", self->client->pers.appleSeeds);
+					self->client->pers.Mondrops++;
+					gi.centerprintf(self, "You now have %i monster drops.\n", self->client->pers.Mondrops);
 				}
-				else if (ri < 0.6)
+				else if (ri < 0.66)
 				{
-					self->client->pers.bananaSeeds++;
-					gi.centerprintf(self, "You received an banana seed\nYou now have %i banana seeds\n", self->client->pers.bananaSeeds);
+					self->client->pers.Mondrops += 2;
+					gi.centerprintf(self, "You now have %i monster drops.\n", self->client->pers.Mondrops);
 				}
-				else if (ri < 0.75)
+				else 
 				{
-					self->client->pers.cherrySeeds++;
-					gi.centerprintf(self, "You received a cherry seed\nYou now have %i cherry seeds\n", self->client->pers.cherrySeeds);
+					self->client->pers.Mondrops += 3;
+					gi.centerprintf(self, "You now have %i monster drops.\n", self->client->pers.Mondrops);
 				}
-				else if (ri < 0.9)
-				{
-					self->client->pers.durianSeeds++;
-					gi.centerprintf(self, "You received a durian seed\nYou now have %i durian seeds\n", self->client->pers.durianSeeds);
-				}
-				else
-				{
-					self->client->pers.elderSeeds++;
-					gi.centerprintf(self, "You received an elder seed\nYou now have %i elder berry seeds\n", self->client->pers.elderSeeds);
-				}
+				
 			}
 		}
 	}
@@ -916,7 +907,42 @@ static void Build_Touch(edict_t *ent, edict_t *other, cplane_t *plane, csurface_
 
 	if (!other->takedamage)
 	{
-		SP_sprinkler(ent);
+		if (ent->owner->client->equipBuild == 1)
+		{
+			if (ent->owner->client->pers.sprinkler > 0)
+			{
+				ent->owner->client->pers.sprinkler--;
+				SP_sprinkler(ent);
+			}
+			else
+			{
+				gi.centerprintf(ent->owner, "Out of sprinklers");
+			}
+		}
+		else if(ent->owner->client->equipBuild == 2)
+		{
+			if (ent->owner->client->pers.armorForge > 0)
+			{
+				ent->owner->client->pers.armorForge--;
+				SP_armor(ent);
+			}
+			else
+			{
+				gi.centerprintf(ent->owner, "Out of Armor Forges");
+			}
+		}
+		else if(ent->owner->client->equipBuild == 3)
+		{
+			if (ent->owner->client->pers.seedMaker > 0)
+			{
+				ent->owner->client->pers.seedMaker--;
+				SP_seedMaker(ent);
+			}
+			else
+			{
+				gi.centerprintf(ent->owner, "Out of Seed Makers");
+			}
+		}
 		G_FreeEdict(ent);
 		return;
 	}
@@ -945,7 +971,10 @@ void fire_grenade (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int s
 	VectorClear (grenade->maxs);
 	grenade->s.modelindex = gi.modelindex ("models/objects/grenade/tris.md2");
 	grenade->owner = self;
-	grenade->touch = Build_Touch;
+	if (self->client)
+		grenade->touch = Build_Touch;
+	else
+		grenade->touch = Grenade_Touch;
 	grenade->nextthink = level.time + timer;
 	grenade->think = Grenade_Explode;
 	grenade->dmg = damage;

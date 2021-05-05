@@ -358,7 +358,10 @@ void Sell(edict_t *ent)
 {
 	gi.centerprintf(ent, "Sell\n 1.Apple-5\n 2.Banana-10\n 3.Cherry-15\n 4.Durian-20\n 5.ElderBerry-25\nCash: %i", ent->client->ps.stats[CASH]);
 }
-
+void Equip(edict_t *ent)
+{
+	gi.centerprintf(ent, "1.sprinkler-10\n 2.armor welder-20\n 3.Seed Maker-30\n", ent->client->ps.stats[CASH]);
+}
 void Touch_Shop(edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
 	self = self;
@@ -369,7 +372,7 @@ void Touch_Shop(edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf
 	else
 	{
 		other->inShop = true;
-		gi.centerprintf(other, "What would you like?\n 1.Buy\n 2.Sell\n");
+		gi.centerprintf(other, "What would you like?\n 1.Buy\n 2.Sell\n 3.Equipment");
 	}
 }
 void SP_monster_NPC(edict_t *owner)
@@ -433,7 +436,7 @@ void SP_monster_NPC(edict_t *owner)
 void SP_sprinkler(edict_t *ent)
 {
 	edict_t *self;
-	vec3_t up;
+	vec3_t forward, up;
 	int timer = 5;
 	self = G_Spawn();
 
@@ -443,11 +446,11 @@ void SP_sprinkler(edict_t *ent)
 		return;
 	}
 
-	AngleVectors(ent->s.angles, NULL, NULL, up);
+	AngleVectors(ent->movedir, forward, NULL, up);
 	VectorMA(ent->s.origin, 100, up, self->s.origin);
 
 
-	self->classname = "monster_NPC";
+	self->classname = "monster_NPC_sprinkler";
 	self->movetype = MOVETYPE_STEP;
 	self->solid = SOLID_BBOX;
 	self->s.modelindex = gi.modelindex("models/monsters/infantry/tris.md2");
@@ -476,4 +479,113 @@ void SP_sprinkler(edict_t *ent)
 	self->monsterinfo.scale = MODEL_SCALE;
 
 }
+void armorTouch(edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
+{
+	plane = NULL;
+	surf = NULL;
+	self = self;
+	if (other->client)
+	{
+		other->inArmor = true;
+		gi.centerprintf(other,"Would you like to convert your monster drops? Y/N\n You have %i\n", other->client->pers.Mondrops);
+	}
+}
+void seedTouch(edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
+{
+	plane = NULL;
+	surf = NULL;
+	self = self;
+	if (other->client)
+	{
+		other->inSEMake = true;
+		gi.centerprintf(other, "Which seeds do you want to make\n1.Apple\n2.Banana\n3.Cherry\n4.Durian\n5.Elder Berries");
+	}
+}
+void SP_armor(edict_t *ent)
+{
+	edict_t *self;
+	vec3_t forward, up;
+	
+	self = G_Spawn();
 
+	if (deathmatch->value)
+	{
+		G_FreeEdict(self);
+		return;
+	}
+
+	AngleVectors(ent->movedir, forward, NULL, up);
+	VectorMA(ent->s.origin, 100, up, self->s.origin);
+
+
+	self->classname = "monster_NPC_armor";
+	self->movetype = MOVETYPE_STEP;
+	self->solid = SOLID_BBOX;
+	self->s.modelindex = gi.modelindex("models/monsters/gladiatr/tris.md2");
+	VectorSet(self->mins, -16, -16, -24);
+	VectorSet(self->maxs, 16, 16, 32);
+
+	self->health = 1000;
+	self->gib_health = -40;
+	self->mass = 200;
+
+	//self->pain = NPC_pain;
+	//self->die = NPC_die;
+
+	self->monsterinfo.stand = NPC_stand;
+	self->monsterinfo.walk = NULL;
+	self->monsterinfo.run = NULL;
+	self->monsterinfo.melee = NULL;
+	self->monsterinfo.sight = NULL;
+	self->monsterinfo.idle = NPC_fidget;
+	self->touch = armorTouch;
+	
+	gi.linkentity(self);
+
+	self->monsterinfo.currentmove = &NPC_move_stand;
+	self->monsterinfo.scale = MODEL_SCALE;
+}
+void SP_seedMaker(edict_t *ent)
+{
+	edict_t *self;
+	vec3_t forward, up;
+
+	self = G_Spawn();
+
+	if (deathmatch->value)
+	{
+		G_FreeEdict(self);
+		return;
+	}
+
+	AngleVectors(ent->movedir, forward, NULL, up);
+	VectorMA(ent->s.origin, 100, up, self->s.origin);
+
+
+	self->classname = "monster_NPC_seed";
+	self->movetype = MOVETYPE_STEP;
+	self->solid = SOLID_BBOX;
+	self->s.modelindex = gi.modelindex("models/monsters/medic/tris.md2");
+	VectorSet(self->mins, -16, -16, -24);
+	VectorSet(self->maxs, 16, 16, 32);
+
+	self->health = 1000;
+	self->gib_health = -40;
+	self->mass = 200;
+
+	//self->pain = NPC_pain;
+	//self->die = NPC_die;
+
+	self->monsterinfo.stand = NPC_stand;
+	self->monsterinfo.walk = NULL;
+	self->monsterinfo.run = NULL;
+	self->monsterinfo.melee = NULL;
+	self->monsterinfo.sight = NULL;
+	self->monsterinfo.idle = NPC_fidget;
+	self->touch = seedTouch;
+
+	gi.linkentity(self);
+
+	self->monsterinfo.currentmove = &NPC_move_stand;
+	self->monsterinfo.scale = MODEL_SCALE;
+}

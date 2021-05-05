@@ -1344,8 +1344,8 @@ void weapon_supershotgun_fire (edict_t *ent)
 	ent->client->ps.gunframe++;
 	PlayerNoise(ent, start, PNOISE_WEAPON);
 
-	if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
-		ent->client->pers.inventory[ent->client->ammo_index] -= 2;
+	//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
+		//ent->client->pers.inventory[ent->client->ammo_index] -= 2;
 }
 
 void Weapon_SuperShotgun (edict_t *ent)

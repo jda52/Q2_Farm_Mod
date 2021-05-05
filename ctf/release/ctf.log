@@ -1,4 +1,4 @@
-﻿Build started 5/4/2021 8:18:45 PM.
+﻿Build started 5/5/2021 6:04:20 PM.
      1>Project "C:\Git\IT_266\Quake2Modding\Farm Mod\quake2-3.21\ctf\ctf.vcxproj" on node 2 (Rebuild target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W4 /WX- /O2 /Oy- /D WIN32 /D NDEBUG /D _WINDOWS /D _VC80_UPGRADE=0x0600 /D _WINDLL /GF /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo".\release\\" /Fd".\release\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt g_ai.c g_chase.c g_cmds.c g_combat.c g_ctf.c g_func.c g_items.c g_main.c g_misc.c g_monster.c g_phys.c g_save.c g_spawn.c g_svcmds.c g_target.c g_trigger.c g_utils.c g_weapon.c m_move.c p_client.c p_hud.c p_menu.c p_trail.c p_view.c p_weapon.c q_shared.c
@@ -524,4 +524,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:20.40
+Time Elapsed 00:00:12.21
