@@ -637,7 +637,7 @@ void InitClientPersistant (gclient_t *client)
 	client->pers.durianSeeds = 0;
 	client->pers.elder = 0;
 	client->pers.elderSeeds = 0;
-	client->pers.cash = 50;
+	client->pers.cash = 100;
 	client->seedType = 1;
 }
 

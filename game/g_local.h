@@ -830,6 +830,10 @@ void Sell(edict_t *ent);
 void SP_monster_NPC(edict_t *owner);
 void sprinkle(edict_t *self);
 void SP_sprinkler(edict_t *self);
+void SP_armor(edict_t *self);
+void SP_seedMaker(edict_t *ent);
+void armorTouch(edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf);
+void seedTouch(edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf);
 //============================================================================
 
 // client_t->anim_priority
@@ -888,6 +892,10 @@ typedef struct
 	int cherrySeeds;
 	int durianSeeds;
 	int elderSeeds;
+	int sprinkler;
+	int armorForge;
+	int seedMaker;
+	int Mondrops;
 	int cash;
 } client_persistant_t;
 
@@ -986,6 +994,7 @@ struct gclient_s
 	edict_t		*chase_target;		// player we are chasing
 	qboolean	update_chase;		// need to update chase info?
 	int seedType;
+	int equipBuild;
 };
 
 
@@ -1143,5 +1152,7 @@ struct edict_s
 	qboolean inShop;
 	qboolean isAlly;
 	qboolean inAttack;
+	qboolean inArmor;
+	qboolean inSEMake;
 };
 
