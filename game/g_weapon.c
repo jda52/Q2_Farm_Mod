@@ -224,7 +224,7 @@ static void fire_lead (edict_t *self, vec3_t start, vec3_t aimdir, int damage, i
 			{
 				if (self->client->pers.elder > 0 && tr.ent->isAlly == false && tr.ent->inAttack == false)
 				{
-					allyChange(tr.ent);
+					allyChange(tr.ent,self);
 					//ai_makeAlly(tr.ent, self);
 					//G_FreeEdict(tr.ent);
 					gi.centerprintf(self, "Enemy is now ally\nNow have %i elder berries", self->client->pers.elder);
@@ -504,7 +504,7 @@ static void fruit_Touch(edict_t *self, edict_t *other, cplane_t *plane, csurface
 				other->client->pers.banana++;
 				gi.centerprintf(other, "Bananas in inventory: %i", other->client->pers.banana);
 			}
-			else if (strcmp(self->classname, "cherry"))
+			else if (strcmp(self->classname, "cherry") == 0)
 			{
 				other->client->pers.cherry++;
 				gi.centerprintf(other, "Cherries in inventory: %i", other->client->pers.cherry);
@@ -526,7 +526,6 @@ static void fruit_Touch(edict_t *self, edict_t *other, cplane_t *plane, csurface
 	{
 		if ((strcmp(other->classname, "water") != 0))
 		{
-			gi.centerprintf(other, "Cannot pick up yet");
 			return;
 		}
 		else
@@ -904,6 +903,8 @@ static void Grenade_Touch (edict_t *ent, edict_t *other, cplane_t *plane, csurfa
 
 static void Build_Touch(edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
+	plane = NULL;
+	surf = NULL;
 	if (other == ent->owner)
 		return;
 
@@ -1152,11 +1153,13 @@ void fire_rail (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick
 		PlayerNoise(self, tr.endpos, PNOISE_IMPACT);
 }
 
-void touch_water(edict_t *ent, edict_t *other)
+void touch_water(edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
+	plane = NULL;
+	surf = NULL;
 	if (strcmp(other->classname, "apple_seed") == 0 || strcmp(other->classname, "banana_seed") == 0 || strcmp(other->classname, "cherry_seed") == 0 || strcmp(other->classname, "durian_seed") == 0 || strcmp(other->classname, "elder_seed") == 0)
 	{
-		fruit_Touch(other, ent, NULL, NULL);
+		fruit_Touch(other, self, NULL, NULL);
 	}
 }
 void fire_water(edict_t *self, vec3_t start, vec3_t dir, int speed, int effect)

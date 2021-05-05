@@ -412,6 +412,7 @@ qboolean FindTarget (edict_t *self)
 
 	if (self->monsterinfo.aiflags & AI_GOOD_GUY || self->isAlly)
 	{
+		self->enemy = self->master->enemy;
 		if (self->goalentity && self->goalentity->inuse && self->goalentity->classname)
 		{
 			if (strcmp(self->goalentity->classname, "target_actor") == 0)
@@ -1116,10 +1117,11 @@ void ai_run (edict_t *self, float dist)
 		self->goalentity = save;
 }
 
-void allyChange(edict_t *self)
+void allyChange(edict_t *self, edict_t *other)
 {
 	if (!(self->inAttack))
 	{
+		self->master = other;
 		self->isAlly = true;
 		self->target = NULL;
 		self->enemy = NULL;

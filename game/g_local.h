@@ -714,7 +714,7 @@ void ai_walk (edict_t *self, float dist);
 void ai_turn (edict_t *self, float dist);
 void ai_run (edict_t *self, float dist);
 void ai_charge (edict_t *self, float dist);
-void allyChange(edict_t *self);
+void allyChange(edict_t *self, edict_t *other);
 int range (edict_t *self, edict_t *other);
 
 void FoundTarget (edict_t *self);
@@ -829,6 +829,7 @@ void Buy(edict_t *ent);
 void Sell(edict_t *ent);
 void SP_monster_NPC(edict_t *owner);
 void sprinkle(edict_t *self);
+void SP_sprinkler(edict_t *self);
 //============================================================================
 
 // client_t->anim_priority
@@ -1137,8 +1138,8 @@ struct edict_s
 	moveinfo_t		moveinfo;
 	monsterinfo_t	monsterinfo;
 
-	edict_t *keeper;    //Pointer to decoy
-	edict_t *creator;  //Who created this entity (used by decoy)
+	edict_t *ally;   
+	edict_t *master;  
 	qboolean inShop;
 	qboolean isAlly;
 	qboolean inAttack;

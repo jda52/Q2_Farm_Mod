@@ -359,8 +359,11 @@ void Sell(edict_t *ent)
 	gi.centerprintf(ent, "Sell\n 1.Apple-5\n 2.Banana-10\n 3.Cherry-15\n 4.Durian-20\n 5.ElderBerry-25\nCash: %i", ent->client->ps.stats[CASH]);
 }
 
-void Touch_Shop(edict_t *other)
+void Touch_Shop(edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
+	self = self;
+		plane = NULL;
+	surf = NULL;
 	if (!other->client)
 		return;
 	else
@@ -430,7 +433,7 @@ void SP_monster_NPC(edict_t *owner)
 void SP_sprinkler(edict_t *ent)
 {
 	edict_t *self;
-	vec3_t forward,up;
+	vec3_t up;
 	int timer = 5;
 	self = G_Spawn();
 
