@@ -1215,8 +1215,8 @@ void fire_water(edict_t *self, vec3_t start, vec3_t dir, int speed, int effect)
 	water->s.effects |= effect;
 	VectorClear(water->mins);
 	VectorClear(water->maxs);
-	//VectorSet(water->mins, -16, -16, -24);
-	//VectorSet(water->maxs, 16, 16, 32);
+	VectorSet(water->mins, -16, -16, -24);
+	VectorSet(water->maxs, 16, 16, 32);
 
 	water->s.modelindex = gi.modelindex("models/objects/laser/tris.md2");
 	water->s.sound = gi.soundindex("misc/lasfly.wav");

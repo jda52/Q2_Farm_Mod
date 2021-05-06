@@ -829,7 +829,7 @@ void Blaster_Fire (edict_t *ent, vec3_t g_offset, int damage, qboolean hyper, in
 	VectorScale (forward, -2, ent->client->kick_origin);
 	ent->client->kick_angles[0] = -1;
 
-	if (ent->client->seedType == 1)
+	if (ent->client->seedType == 1 && hyper == false)
 	{
 		if (ent->client->pers.appleSeeds > 0)
 		{
@@ -842,7 +842,7 @@ void Blaster_Fire (edict_t *ent, vec3_t g_offset, int damage, qboolean hyper, in
 			gi.centerprintf(ent, "No more apples\n");
 		}
 	}
-	else if (ent->client->seedType == 2)
+	else if (ent->client->seedType == 2 && hyper == false)
 	{
 		if (ent->client->pers.bananaSeeds > 0)
 		{
@@ -855,7 +855,7 @@ void Blaster_Fire (edict_t *ent, vec3_t g_offset, int damage, qboolean hyper, in
 			gi.centerprintf(ent, "No more bananas\n");
 		}
 	}
-	else if (ent->client->seedType == 3)
+	else if (ent->client->seedType == 3 && hyper == false)
 	{
 		if (ent->client->pers.cherrySeeds > 0)
 		{
@@ -868,7 +868,7 @@ void Blaster_Fire (edict_t *ent, vec3_t g_offset, int damage, qboolean hyper, in
 			gi.centerprintf(ent, "No more cherries\n");
 		}
 	}
-	else if (ent->client->seedType == 4)
+	else if (ent->client->seedType == 4 && hyper == false)
 	{
 		if (ent->client->pers.durianSeeds > 0)
 		{
@@ -881,9 +881,9 @@ void Blaster_Fire (edict_t *ent, vec3_t g_offset, int damage, qboolean hyper, in
 			gi.centerprintf(ent, "No more durians\n");
 		}
 	}
-	else if (ent->client->seedType == 5)
+	else if (ent->client->seedType == 5 && hyper == false)
 	{
-		if (ent->client->pers.elderSeeds-- > 0)
+		if (ent->client->pers.elderSeeds > 0)
 		{
 			ent->client->pers.elderSeeds--;
 			gi.centerprintf(ent, "Elder berry seeds left: %i\n", ent->client->pers.elderSeeds);
@@ -894,8 +894,10 @@ void Blaster_Fire (edict_t *ent, vec3_t g_offset, int damage, qboolean hyper, in
 			gi.centerprintf(ent, "No more elder berries\n");
 		}
 	}
-	//fire_blaster (ent, start, forward, damage, 1000, effect, hyper);
-
+	else
+	{
+		fire_blaster(ent, start, forward, damage, 1000, effect, hyper);
+	}
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
 	gi.WriteShort (ent-g_edicts);

@@ -1029,26 +1029,27 @@ void ClientCommand (edict_t *ent)
 			if (ent->client->pers.apple > 0)
 			{
 				float ri = random();
+				ent->client->pers.apple--;
 				if (ri < 0.33)
 				{
 					ent->client->pers.appleSeeds++;
-					ent->client->pers.apple--;
 					gi.centerprintf(ent, "You now have %i apple seeds.\n", ent->client->pers.appleSeeds);
 				}
 				else if (ri < 0.66)
 				{
 					ent->client->pers.appleSeeds += 2;
-					ent->client->pers.apple--;
 					gi.centerprintf(ent, "You now have %i apple seeds.\n", ent->client->pers.appleSeeds);
 				}
 				else
 				{
 					ent->client->pers.appleSeeds += 3;
-					ent->client->pers.apple--;
 					gi.centerprintf(ent, "You now have %i apple seeds.\n", ent->client->pers.appleSeeds);
 				}
 			}
-			ent->inSEMake = false;
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "You do not have this");
+			}
 		}
 		else 
 		{
@@ -1101,6 +1102,7 @@ void ClientCommand (edict_t *ent)
 		{
 			if (ent->client->pers.banana > 0)
 			{
+				ent->client->pers.banana--;
 				float ri = random();
 				if (ri < 0.33)
 				{
@@ -1118,7 +1120,10 @@ void ClientCommand (edict_t *ent)
 					gi.centerprintf(ent, "You now have %i banana seeds.\n", ent->client->pers.bananaSeeds);
 				}
 			}
-			ent->inSEMake = false;
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "You do not have this");
+			}
 		}
 		else 
 		{
@@ -1136,10 +1141,7 @@ void ClientCommand (edict_t *ent)
 	}
 	else if (Q_stricmp(cmd, "3") == 0)
 	{
-		if (ent->inShop == false)
-		{
-			return;
-		}if (buyMenu == false && sellMenu == false && equipMenu == false && ent->inSEMake == false)
+		if (buyMenu == false && sellMenu == false && equipMenu == false && ent->inSEMake == false)
 		{
 			equipMenu = true;
 			Equip(ent);
@@ -1171,6 +1173,7 @@ void ClientCommand (edict_t *ent)
 			if (ent->client->pers.cherry > 0)
 			{
 				float ri = random();
+				ent->client->pers.cherry--;
 				if (ri < 0.33)
 				{
 					ent->client->pers.cherrySeeds++;
@@ -1186,6 +1189,10 @@ void ClientCommand (edict_t *ent)
 					ent->client->pers.cherrySeeds += 3;
 					gi.centerprintf(ent, "You now have %i cherry seeds.\n", ent->client->pers.cherrySeeds);
 				}
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "You do not have this");
 			}
 		}
 		else 
@@ -1204,11 +1211,7 @@ void ClientCommand (edict_t *ent)
 	}
 	else if (Q_stricmp(cmd, "4") == 0)
 	{
-		if (ent->inShop == false)
-		{
-			return;
-		}
-		else if (buyMenu == true && sellMenu == false && equipMenu == false && ent->inSEMake == false)
+		if (buyMenu == true && sellMenu == false && equipMenu == false && ent->inSEMake == false)
 		{
 			if (ent->client->pers.cash >= 12)
 			{
@@ -1225,6 +1228,7 @@ void ClientCommand (edict_t *ent)
 		{
 			if (ent->client->pers.durian > 0)
 			{
+				ent->client->pers.durian--;
 				float ri = random();
 				if (ri < 0.33)
 				{
@@ -1242,7 +1246,10 @@ void ClientCommand (edict_t *ent)
 					gi.centerprintf(ent, "You now have %i durian seeds.\n", ent->client->pers.durianSeeds);
 				}
 			}
-			ent->inSEMake = false;
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "You do not have this");
+			}
 		}
 		else 
 		{
@@ -1260,11 +1267,7 @@ void ClientCommand (edict_t *ent)
 	}
 	else if (Q_stricmp(cmd, "5") == 0)
 	{
-		if (ent->inShop == false)
-		{
-			return;
-		}
-		else if (buyMenu == true && sellMenu == false && equipMenu == false && ent->inSEMake == false)
+		if (buyMenu == true && sellMenu == false && equipMenu == false && ent->inSEMake == false)
 		{
 			if (ent->client->pers.cash >= 15)
 			{
@@ -1281,6 +1284,7 @@ void ClientCommand (edict_t *ent)
 		{
 			if (ent->client->pers.elder > 0)
 			{
+				ent->client->pers.elder--;
 				float ri = random();
 				if (ri < 0.33)
 				{
@@ -1298,7 +1302,10 @@ void ClientCommand (edict_t *ent)
 					gi.centerprintf(ent, "You now have %i elder seeds.\n", ent->client->pers.elderSeeds);
 				}
 			}
-			ent->inSEMake = false;
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "You do not have this");
+			}
 		}
 		else 
 		{
@@ -1321,6 +1328,7 @@ void ClientCommand (edict_t *ent)
 		buyMenu = false;
 		sellMenu = false;
 		equipMenu = false;
+		ent->inSEMake = false;
 		return;
 	}
 	else if (Q_stricmp(cmd, "apple") == 0)
