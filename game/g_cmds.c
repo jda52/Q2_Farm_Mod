@@ -20,7 +20,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "g_local.h"
 #include "m_player.h"
 
-
+qboolean buyMenu = false;
+qboolean sellMenu = false;
+qboolean equipMenu = false;
 char *ClientTeam (edict_t *ent)
 {
 	char		*p;
@@ -987,6 +989,403 @@ void ClientCommand (edict_t *ent)
 		Cmd_Wave_f (ent);
 	else if (Q_stricmp(cmd, "playerlist") == 0)
 		Cmd_PlayerList_f(ent);
+	else if (Q_stricmp(cmd, "shop") == 0)
+		SP_monster_NPC(ent);
+	else if (Q_stricmp(cmd, "1") == 0)
+	{
+		if (buyMenu == false && sellMenu == false && equipMenu == false && ent->inSEMake == false)
+		{
+			buyMenu = true;
+			Buy(ent);
+		}
+		else if(buyMenu == true && sellMenu == false && equipMenu == false && ent->inSEMake == false)
+		{
+			if (ent->client->pers.cash >= 3)
+			{
+				ent->client->pers.cash -= 3;
+				ent->client->pers.appleSeeds++;
+				gi.cprintf(ent, PRINT_HIGH, "Bought Apples seeds%i\ncash:%i\n", ent->client->pers.appleSeeds, ent->client->pers.cash);
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "Not enough Cash");
+			}
+		}
+		else if (buyMenu == false && sellMenu == false && equipMenu == true && ent->inSEMake == false)
+		{
+			if (ent->client->pers.cash >= 10)
+			{
+				ent->client->pers.cash -= 10;
+				ent->client->pers.sprinkler++;
+				gi.cprintf(ent, PRINT_HIGH, "Bought sprinkler %i\ncash:%i\n", ent->client->pers.sprinkler, ent->client->pers.cash);
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "Not enough Cash");
+			}
+		}
+		else if (buyMenu == false && sellMenu == false && equipMenu == false && ent->inSEMake == true)
+		{
+			if (ent->client->pers.apple > 0)
+			{
+				float ri = random();
+				ent->client->pers.apple--;
+				if (ri < 0.33)
+				{
+					ent->client->pers.appleSeeds++;
+					gi.centerprintf(ent, "You now have %i apple seeds.\n", ent->client->pers.appleSeeds);
+				}
+				else if (ri < 0.66)
+				{
+					ent->client->pers.appleSeeds += 2;
+					gi.centerprintf(ent, "You now have %i apple seeds.\n", ent->client->pers.appleSeeds);
+				}
+				else
+				{
+					ent->client->pers.appleSeeds += 3;
+					gi.centerprintf(ent, "You now have %i apple seeds.\n", ent->client->pers.appleSeeds);
+				}
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "You do not have this");
+			}
+		}
+		else 
+		{
+			if (ent->client->pers.apple > 0)
+			{
+				ent->client->pers.cash += 5;
+				ent->client->pers.apple--;
+				gi.cprintf(ent, PRINT_HIGH, "Sold Apples%i\ncash:%i\n", ent->client->pers.apple, ent->client->pers.cash);
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "You do not have this");
+			}
+		}
+	}
+	else if (Q_stricmp(cmd, "2") == 0)
+	{
+		if (buyMenu == false && sellMenu == false && equipMenu == false && ent->inSEMake == false)
+		{
+			sellMenu = true;
+			Sell(ent);
+		}
+		else if (buyMenu == true && sellMenu == false && equipMenu == false && ent->inSEMake == false)
+		{
+			if (ent->client->pers.cash >= 6)
+			{
+				ent->client->pers.cash -= 6;
+				ent->client->pers.bananaSeeds++;
+				gi.cprintf(ent, PRINT_HIGH, "Bought Banana seeds %i\ncash:%i\n", ent->client->pers.bananaSeeds, ent->client->pers.cash);
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "Not enough Cash");
+			}
+		}
+		else if (buyMenu == false && sellMenu == false && equipMenu == true && ent->inSEMake == false)
+		{
+			if (ent->client->pers.cash >= 20)
+			{
+				ent->client->pers.cash -= 20;
+				ent->client->pers.armorForge++;
+				gi.cprintf(ent, PRINT_HIGH, "Bought armor forge %i\ncash:%i\n", ent->client->pers.armorForge, ent->client->pers.cash);
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "Not enough Cash");
+			}
+		}
+		else if (buyMenu == false && sellMenu == false && equipMenu == false && ent->inSEMake == true)
+		{
+			if (ent->client->pers.banana > 0)
+			{
+				ent->client->pers.banana--;
+				float ri = random();
+				if (ri < 0.33)
+				{
+					ent->client->pers.bananaSeeds++;
+					gi.centerprintf(ent, "You now have %i banana seeds.\n", ent->client->pers.bananaSeeds);
+				}
+				else if (ri < 0.66)
+				{
+					ent->client->pers.bananaSeeds += 2;
+					gi.centerprintf(ent, "You now have %i banana seeds.\n", ent->client->pers.bananaSeeds);
+				}
+				else
+				{
+					ent->client->pers.bananaSeeds += 3;
+					gi.centerprintf(ent, "You now have %i banana seeds.\n", ent->client->pers.bananaSeeds);
+				}
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "You do not have this");
+			}
+		}
+		else 
+		{
+			if (ent->client->pers.banana > 0)
+			{
+				ent->client->pers.cash += 10;
+				ent->client->pers.banana--;
+				gi.cprintf(ent, PRINT_HIGH, "Sold Banana %i\ncash:%i\n", ent->client->pers.banana, ent->client->pers.cash);
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "You do not have this");
+			}
+		}
+	}
+	else if (Q_stricmp(cmd, "3") == 0)
+	{
+		if (buyMenu == false && sellMenu == false && equipMenu == false && ent->inSEMake == false)
+		{
+			equipMenu = true;
+			Equip(ent);
+		}
+		else if (buyMenu == true && sellMenu == false && equipMenu == false && ent->inSEMake == false)
+		{
+			if (ent->client->pers.cash >= 9)
+			{
+				ent->client->pers.cash -= 9;
+				ent->client->pers.cherrySeeds++;
+				gi.cprintf(ent, PRINT_HIGH, "Bought Cherry seeds %i\ncash: %i\n", ent->client->pers.cherrySeeds, ent->client->pers.cash);
+			}
+		}
+		else if (buyMenu == false && sellMenu == false && equipMenu == true && ent->inSEMake == false)
+		{
+			if (ent->client->pers.cash >= 30)
+			{
+				ent->client->pers.cash -= 30;
+				ent->client->pers.seedMaker++;
+				gi.cprintf(ent, PRINT_HIGH, "Bought seedMaker %i\ncash:%i\n", ent->client->pers.seedMaker, ent->client->pers.cash);
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "Not enough Cash");
+			}
+		}
+		else if (buyMenu == false && sellMenu == false && equipMenu == false && ent->inSEMake == true)
+		{
+			if (ent->client->pers.cherry > 0)
+			{
+				float ri = random();
+				ent->client->pers.cherry--;
+				if (ri < 0.33)
+				{
+					ent->client->pers.cherrySeeds++;
+					gi.centerprintf(ent, "You now have %i cherry seeds.\n", ent->client->pers.cherrySeeds);
+				}
+				else if (ri < 0.66)
+				{
+					ent->client->pers.cherrySeeds += 2;
+					gi.centerprintf(ent, "You now have %i cherry seeds.\n", ent->client->pers.cherrySeeds);
+				}
+				else
+				{
+					ent->client->pers.cherrySeeds += 3;
+					gi.centerprintf(ent, "You now have %i cherry seeds.\n", ent->client->pers.cherrySeeds);
+				}
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "You do not have this");
+			}
+		}
+		else 
+		{
+			if (ent->client->pers.cherry > 0)
+			{
+				ent->client->pers.cash += 15;
+				ent->client->pers.cherry--;
+				gi.cprintf(ent, PRINT_HIGH, "Sold Cherry %i\ncash:%i\n", ent->client->pers.cherry, ent->client->pers.cash);
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "You do not have this");
+			}
+		}
+	}
+	else if (Q_stricmp(cmd, "4") == 0)
+	{
+		if (buyMenu == true && sellMenu == false && equipMenu == false && ent->inSEMake == false)
+		{
+			if (ent->client->pers.cash >= 12)
+			{
+				ent->client->pers.cash -= 12;
+				ent->client->pers.durianSeeds++;
+				gi.cprintf(ent, PRINT_HIGH, "Bought Durian seeds %i\ncash:%i\n", ent->client->pers.durianSeeds, ent->client->pers.cash);
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "Not enough Cash");
+			}
+		}
+		else if (buyMenu == false && sellMenu == false && equipMenu == false && ent->inSEMake == true)
+		{
+			if (ent->client->pers.durian > 0)
+			{
+				ent->client->pers.durian--;
+				float ri = random();
+				if (ri < 0.33)
+				{
+					ent->client->pers.durianSeeds++;
+					gi.centerprintf(ent, "You now have %i durian seeds.\n", ent->client->pers.durianSeeds);
+				}
+				else if (ri < 0.66)
+				{
+					ent->client->pers.durianSeeds += 2;
+					gi.centerprintf(ent, "You now have %i durian seeds.\n", ent->client->pers.durianSeeds);
+				}
+				else
+				{
+					ent->client->pers.durianSeeds += 3;
+					gi.centerprintf(ent, "You now have %i durian seeds.\n", ent->client->pers.durianSeeds);
+				}
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "You do not have this");
+			}
+		}
+		else 
+		{
+			if (ent->client->pers.durian > 0)
+			{
+				ent->client->pers.cash -= 20;
+				ent->client->pers.durian--;
+				gi.cprintf(ent, PRINT_HIGH, "Sold Durian %i\ncash:%i\n", ent->client->pers.durian, ent->client->pers.cash);
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "You do not have this");
+			}
+		}
+	}
+	else if (Q_stricmp(cmd, "5") == 0)
+	{
+		if (buyMenu == true && sellMenu == false && equipMenu == false && ent->inSEMake == false)
+		{
+			if (ent->client->pers.cash >= 15)
+			{
+				ent->client->pers.cash -= 15;
+				ent->client->pers.elderSeeds++;
+				gi.cprintf(ent, PRINT_HIGH, "Bought ElderBerry seeds %i\n cash:%i\n", ent->client->pers.elderSeeds, ent->client->pers.cash);
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "Not enough Cash");
+			}
+		}
+		else if (buyMenu == false && sellMenu == false && equipMenu == false && ent->inSEMake == true)
+		{
+			if (ent->client->pers.elder > 0)
+			{
+				ent->client->pers.elder--;
+				float ri = random();
+				if (ri < 0.33)
+				{
+					ent->client->pers.elderSeeds++;
+					gi.centerprintf(ent, "You now have %i elder berry seeds.\n", ent->client->pers.elderSeeds);
+				}
+				else if (ri < 0.66)
+				{
+					ent->client->pers.elderSeeds += 2;
+					gi.centerprintf(ent, "You now have %i elder seeds.\n", ent->client->pers.elderSeeds);
+				}
+				else
+				{
+					ent->client->pers.elderSeeds += 3;
+					gi.centerprintf(ent, "You now have %i elder seeds.\n", ent->client->pers.elderSeeds);
+				}
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "You do not have this");
+			}
+		}
+		else 
+		{
+			if (ent->client->pers.elder > 0)
+			{
+				ent->client->pers.cash += 25;
+				ent->client->pers.elder--;
+				gi.cprintf(ent, PRINT_HIGH, "Sold ElderBerry %i\ncash:%i\n", ent->client->pers.elder, ent->client->pers.cash);
+			}
+			else
+			{
+				gi.cprintf(ent, PRINT_HIGH, "You do not have this");
+			}
+		}
+	}
+	else if (Q_stricmp(cmd, "6") == 0)
+	{
+		gi.cprintf(ent, PRINT_HIGH, "Please come again\n");
+		ent->inShop = false;
+		buyMenu = false;
+		sellMenu = false;
+		equipMenu = false;
+		ent->inSEMake = false;
+		return;
+	}
+	else if (Q_stricmp(cmd, "apple") == 0)
+	{
+		gi.centerprintf(ent, "Now planting apples");
+		ent->client->seedType = 1;
+	}
+	else if (Q_stricmp(cmd, "banana") == 0)
+	{
+		gi.centerprintf(ent, "Now planting bananas");
+		ent->client->seedType = 2;
+	}
+	else if (Q_stricmp(cmd, "cherry") == 0)
+	{
+		gi.centerprintf(ent, "Now planting cherries");
+		ent->client->seedType = 3;
+	}
+	else if (Q_stricmp(cmd, "durian") == 0)
+	{
+		gi.centerprintf(ent, "Now planting durians");
+		ent->client->seedType = 4;
+	}
+	else if (Q_stricmp(cmd, "elder") == 0)
+	{
+		gi.centerprintf(ent, "Now planting elder berries");
+		ent->client->seedType = 5;
+	}
+	else if (Q_stricmp(cmd, "Manyelders") == 0)
+	{
+		ent->client->pers.elder = 99;
+		gi.centerprintf(ent, "Now have %i elder berries", ent->client->pers.elder);
+	}
+	else if (Q_stricmp(cmd, "sprinkler") == 0)
+	{
+		gi.centerprintf(ent, "Now building sprinkler");
+		ent->client->equipBuild = 1;
+	}
+	else if (Q_stricmp(cmd, "armorforge") == 0)
+	{
+		gi.centerprintf(ent, "Now building armor Forge");
+		ent->client->equipBuild = 2;
+	}
+	else if (Q_stricmp(cmd, "seedMaker") == 0)
+	{
+		gi.centerprintf(ent, "Now building seed maker");
+		ent->client->equipBuild = 3;
+	}
+	else if (Q_stricmp(cmd, "y") == 0)
+	{
+		if (ent->inArmor == true)
+		{
+			ent->client->pers.inventory[ArmorIndex(ent)] += ent->client->pers.Mondrops * 5;
+			ent->client->pers.Mondrops = 0;
+			gi.centerprintf(ent, "Armor created");
+			ent->inArmor = false;
+		}
+	}
 	else	// anything that doesn't match a command will be a chat
 		Cmd_Say_f (ent, false, true);
 }

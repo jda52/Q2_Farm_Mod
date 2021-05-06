@@ -829,8 +829,75 @@ void Blaster_Fire (edict_t *ent, vec3_t g_offset, int damage, qboolean hyper, in
 	VectorScale (forward, -2, ent->client->kick_origin);
 	ent->client->kick_angles[0] = -1;
 
-	fire_blaster (ent, start, forward, damage, 1000, effect, hyper);
-
+	if (ent->client->seedType == 1 && hyper == false)
+	{
+		if (ent->client->pers.appleSeeds > 0)
+		{
+			ent->client->pers.appleSeeds--;
+			gi.centerprintf(ent, "Apple seeds left: %i\n", ent->client->pers.appleSeeds);
+			plantApple(ent, start, forward, 6);
+		}
+		else
+		{
+			gi.centerprintf(ent, "No more apples\n");
+		}
+	}
+	else if (ent->client->seedType == 2 && hyper == false)
+	{
+		if (ent->client->pers.bananaSeeds > 0)
+		{
+			ent->client->pers.bananaSeeds--;
+			gi.centerprintf(ent, "Banana seeds left: %i\n", ent->client->pers.bananaSeeds);
+			plantBanana(ent, start, forward, 6);
+		}
+		else
+		{
+			gi.centerprintf(ent, "No more bananas\n");
+		}
+	}
+	else if (ent->client->seedType == 3 && hyper == false)
+	{
+		if (ent->client->pers.cherrySeeds > 0)
+		{
+			ent->client->pers.cherrySeeds--;
+			gi.centerprintf(ent, "Cherry seeds left: %i\n", ent->client->pers.cherrySeeds);
+			plantCherry(ent, start, forward, 6);
+		}
+		else
+		{
+			gi.centerprintf(ent, "No more cherries\n");
+		}
+	}
+	else if (ent->client->seedType == 4 && hyper == false)
+	{
+		if (ent->client->pers.durianSeeds > 0)
+		{
+			ent->client->pers.durianSeeds--;
+			gi.centerprintf(ent, "Durian seeds left: %i\n", ent->client->pers.durianSeeds);
+			plantDurian(ent, start, forward, 6);
+		}
+		else
+		{
+			gi.centerprintf(ent, "No more durians\n");
+		}
+	}
+	else if (ent->client->seedType == 5 && hyper == false)
+	{
+		if (ent->client->pers.elderSeeds > 0)
+		{
+			ent->client->pers.elderSeeds--;
+			gi.centerprintf(ent, "Elder berry seeds left: %i\n", ent->client->pers.elderSeeds);
+			plantElder(ent, start, forward, 6);
+		}
+		else
+		{
+			gi.centerprintf(ent, "No more elder berries\n");
+		}
+	}
+	else
+	{
+		fire_blaster(ent, start, forward, damage, 1000, effect, hyper);
+	}
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
 	gi.WriteShort (ent-g_edicts);
@@ -1181,6 +1248,7 @@ SHOTGUN / SUPERSHOTGUN
 ======================================================================
 */
 
+
 void weapon_shotgun_fire (edict_t *ent)
 {
 	vec3_t		start;
@@ -1194,7 +1262,7 @@ void weapon_shotgun_fire (edict_t *ent)
 		ent->client->ps.gunframe++;
 		return;
 	}
-
+	ent->client->pers.elder--;
 	AngleVectors (ent->client->v_angle, forward, right, NULL);
 
 	VectorScale (forward, -2, ent->client->kick_origin);
@@ -1208,7 +1276,7 @@ void weapon_shotgun_fire (edict_t *ent)
 		damage *= 4;
 		kick *= 4;
 	}
-
+	
 	if (deathmatch->value)
 		fire_shotgun (ent, start, forward, damage, kick, 500, 500, DEFAULT_DEATHMATCH_SHOTGUN_COUNT, MOD_SHOTGUN);
 	else
@@ -1223,7 +1291,7 @@ void weapon_shotgun_fire (edict_t *ent)
 	ent->client->ps.gunframe++;
 	PlayerNoise(ent, start, PNOISE_WEAPON);
 
-	if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
+	if (!((int)dmflags->value & DF_INFINITE_AMMO) || ent -> client -> pers.elder > 0)
 		ent->client->pers.inventory[ent->client->ammo_index]--;
 }
 
@@ -1263,10 +1331,11 @@ void weapon_supershotgun_fire (edict_t *ent)
 	v[YAW]   = ent->client->v_angle[YAW] - 5;
 	v[ROLL]  = ent->client->v_angle[ROLL];
 	AngleVectors (v, forward, NULL, NULL);
-	fire_shotgun (ent, start, forward, damage, kick, DEFAULT_SHOTGUN_HSPREAD, DEFAULT_SHOTGUN_VSPREAD, DEFAULT_SSHOTGUN_COUNT/2, MOD_SSHOTGUN);
+	//fire_shotgun (ent, start, forward, damage, kick, DEFAULT_SHOTGUN_HSPREAD, DEFAULT_SHOTGUN_VSPREAD, DEFAULT_SSHOTGUN_COUNT/2, MOD_SSHOTGUN);
+	harvest(ent, start, forward, DEFAULT_SHOTGUN_HSPREAD, DEFAULT_SHOTGUN_VSPREAD);
 	v[YAW]   = ent->client->v_angle[YAW] + 5;
 	AngleVectors (v, forward, NULL, NULL);
-	fire_shotgun (ent, start, forward, damage, kick, DEFAULT_SHOTGUN_HSPREAD, DEFAULT_SHOTGUN_VSPREAD, DEFAULT_SSHOTGUN_COUNT/2, MOD_SSHOTGUN);
+	//fire_shotgun (ent, start, forward, damage, kick, DEFAULT_SHOTGUN_HSPREAD, DEFAULT_SHOTGUN_VSPREAD, DEFAULT_SSHOTGUN_COUNT/2, MOD_SSHOTGUN);
 
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);
@@ -1277,8 +1346,8 @@ void weapon_supershotgun_fire (edict_t *ent)
 	ent->client->ps.gunframe++;
 	PlayerNoise(ent, start, PNOISE_WEAPON);
 
-	if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
-		ent->client->pers.inventory[ent->client->ammo_index] -= 2;
+	//if (! ( (int)dmflags->value & DF_INFINITE_AMMO ) )
+		//ent->client->pers.inventory[ent->client->ammo_index] -= 2;
 }
 
 void Weapon_SuperShotgun (edict_t *ent)
@@ -1346,13 +1415,52 @@ void weapon_railgun_fire (edict_t *ent)
 		ent->client->pers.inventory[ent->client->ammo_index]--;
 }
 
+void tool_watering_can(edict_t *ent)
+{
+	vec3_t		start;
+	vec3_t		forward, right;
+	vec3_t		offset;
+	int			damage;
+	int			kick;
+
+	damage = 150;
+	kick = 250;
+	
+
+	if (is_quad)
+	{
+		damage *= 4;
+		kick *= 4;
+	}
+
+	AngleVectors(ent->client->v_angle, forward, right, NULL);
+
+	VectorScale(forward, -3, ent->client->kick_origin);
+	ent->client->kick_angles[0] = -3;
+
+	VectorSet(offset, 0, 7, ent->viewheight - 8);
+	P_ProjectSource(ent->client, ent->s.origin, offset, forward, right, start);
+	fire_water(ent, start, forward, 500, EF_BLASTER);
+	
+	// send muzzle flash
+	gi.WriteByte(svc_muzzleflash);
+	gi.WriteShort(ent - g_edicts);
+	gi.WriteByte(MZ_RAILGUN | is_silenced);
+	gi.multicast(ent->s.origin, MULTICAST_PVS);
+
+	ent->client->ps.gunframe++;
+	PlayerNoise(ent, start, PNOISE_WEAPON);
+
+	if (!((int)dmflags->value & DF_INFINITE_AMMO))
+		ent->client->pers.inventory[ent->client->ammo_index]--;
+}
 
 void Weapon_Railgun (edict_t *ent)
 {
 	static int	pause_frames[]	= {56, 0};
 	static int	fire_frames[]	= {4, 0};
 
-	Weapon_Generic (ent, 3, 18, 56, 61, pause_frames, fire_frames, weapon_railgun_fire);
+	Weapon_Generic (ent, 3, 18, 56, 61, pause_frames, fire_frames, tool_watering_can);
 }
 
 

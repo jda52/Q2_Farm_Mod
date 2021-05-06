@@ -163,7 +163,7 @@ The monster is walking it's beat
 void ai_walk (edict_t *self, float dist)
 {
 	M_MoveToGoal (self, dist);
-
+	
 	// check for noticing a player
 	if (FindTarget (self))
 		return;
@@ -410,8 +410,9 @@ qboolean FindTarget (edict_t *self)
 	qboolean	heardit;
 	int			r;
 
-	if (self->monsterinfo.aiflags & AI_GOOD_GUY)
+	if (self->monsterinfo.aiflags & AI_GOOD_GUY || self->isAlly)
 	{
+		self->enemy = self->master->enemy;
 		if (self->goalentity && self->goalentity->inuse && self->goalentity->classname)
 		{
 			if (strcmp(self->goalentity->classname, "target_actor") == 0)
@@ -458,7 +459,7 @@ qboolean FindTarget (edict_t *self)
 		if (!client)
 			return false;	// no clients to get mad at
 	}
-
+	
 	// if the entity went away, forget it
 	if (!client->inuse)
 		return false;
@@ -1115,3 +1116,89 @@ void ai_run (edict_t *self, float dist)
 	if (self)
 		self->goalentity = save;
 }
+
+void allyChange(edict_t *self, edict_t *other)
+{
+	if (!(self->inAttack))
+	{
+		self->master = other;
+		self->isAlly = true;
+		self->target = NULL;
+		self->enemy = NULL;
+	}
+}
+/*
+void ai_touch(edict_t *self, edict_t *other)
+{
+	if (other->client)
+		gi.centerprintf(other, "Recognize touch");
+}
+void ai_makeAlly(edict_t *self, edict_t* user)
+{
+	edict_t* ally;
+	vec3_t forward, right, up;
+
+		ally = G_Spawn();
+
+		AngleVectors(user->client->v_angle, forward, right, up);
+		VectorMA(user->s.origin, 50, up, ally->s.origin);
+		
+	
+		ally->s.effects = 0;
+		ally->s.frame = 0;
+		ally->model = self->model;
+		ally->classname = self->classname;
+		ally->movetype = MOVETYPE_STEP;
+		ally->solid = SOLID_BBOX;
+		ally->takedamage = DAMAGE_AIM;
+		ally->s.modelindex = self->s.modelindex;
+		ally->s.modelindex2 = self->s.modelindex;
+		ally->clipmask = self->clipmask;
+		VectorSet(self->mins, -20, -20, -24);
+		VectorSet(self->maxs, 20, 20, 32);
+
+		ally->health = self->health;
+		ally->gib_health = self->gib_health;
+		ally->mass = 200;
+		ally->pain = self->pain;
+		ally->die = self->die;
+		ally->touch = ai_touch;
+		
+		
+
+		ally->monsterinfo.scale = self->monsterinfo.scale;
+		ally->monsterinfo.aiflags &= AI_GOOD_GUY;
+		
+		ally->monsterinfo.stand = self->monsterinfo.stand;
+		ally->monsterinfo.walk = self->monsterinfo.walk;
+		ally->monsterinfo.run = self->monsterinfo.run;
+		ally->monsterinfo.dodge = self->monsterinfo.dodge;
+		ally->monsterinfo.attack = self->monsterinfo.attack;
+		ally->monsterinfo.melee = self->monsterinfo.melee;
+		ally->monsterinfo.sight = self->monsterinfo.sight;
+		ally->target = NULL;
+		ally->enemy = NULL;
+		ally->s.skinnum = self->s.skinnum;
+		
+		
+
+		ally->monsterinfo.currentmove = self->monsterinfo.currentmove;
+		ally->s.angles[PITCH] = user->s.angles[PITCH];
+		ally->s.angles[YAW] = user->s.angles[YAW];
+		ally->s.angles[ROLL] = user->s.angles[ROLL];
+
+		ally->max_health = self->max_health;
+		ally->isAlly = true;
+
+		gi.linkentity(ally);
+
+		//ally->monsterinfo.stand(ally);
+
+		walkmonster_start(ally);
+		//self->isAlly = true;
+		//M_ReactToDamage(self, user);
+		//self->pain(self, user, 8, 0);
+		//self->flags &= ~(FL_FLY | FL_SWIM);
+}
+
+*/

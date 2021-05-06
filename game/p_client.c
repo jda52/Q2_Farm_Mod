@@ -625,8 +625,20 @@ void InitClientPersistant (gclient_t *client)
 	client->pers.max_grenades	= 50;
 	client->pers.max_cells		= 200;
 	client->pers.max_slugs		= 50;
-
+	
 	client->pers.connected = true;
+	client->pers.apple = 5;
+	client->pers.appleSeeds = 5;
+	client->pers.banana = 0;
+	client->pers.bananaSeeds = 0;
+	client->pers.cherry = 0;
+	client->pers.cherrySeeds = 0;
+	client->pers.durian = 0;
+	client->pers.durianSeeds = 0;
+	client->pers.elder = 0;
+	client->pers.elderSeeds = 0;
+	client->pers.cash = 100;
+	client->seedType = 1;
 }
 
 
@@ -1251,7 +1263,7 @@ void PutClientInServer (edict_t *ent)
 	}
 
 	gi.linkentity (ent);
-
+	
 	// force the current weapon up
 	client->newweapon = client->pers.weapon;
 	ChangeWeapon (ent);
@@ -1353,7 +1365,7 @@ void ClientBegin (edict_t *ent)
 			gi.bprintf (PRINT_HIGH, "%s entered the game\n", ent->client->pers.netname);
 		}
 	}
-
+	
 	// make sure all view stuff is valid
 	ClientEndServerFrame (ent);
 }

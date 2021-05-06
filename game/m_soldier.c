@@ -315,6 +315,7 @@ mmove_t soldier_move_run = {FRAME_run03, FRAME_run08, soldier_frames_run, NULL};
 
 void soldier_run (edict_t *self)
 {
+	self->inAttack = false;
 	if (self->monsterinfo.aiflags & AI_STAND_GROUND)
 	{
 		self->monsterinfo.currentmove = &soldier_move_stand1;
@@ -411,6 +412,9 @@ void soldier_pain (edict_t *self, edict_t *other, float kick, int damage)
 	float	r;
 	int		n;
 
+	if (self->monsterinfo.aiflags & AI_GOOD_GUY)
+		self->target = NULL;
+
 	if (self->health < (self->max_health / 2))
 			self->s.skinnum |= 1;
 
@@ -448,6 +452,7 @@ void soldier_pain (edict_t *self, edict_t *other, float kick, int damage)
 		self->monsterinfo.currentmove = &soldier_move_pain2;
 	else
 		self->monsterinfo.currentmove = &soldier_move_pain3;
+	
 }
 
 
@@ -456,7 +461,7 @@ void soldier_pain (edict_t *self, edict_t *other, float kick, int damage)
 //
 
 static int blaster_flash [] = {MZ2_SOLDIER_BLASTER_1, MZ2_SOLDIER_BLASTER_2, MZ2_SOLDIER_BLASTER_3, MZ2_SOLDIER_BLASTER_4, MZ2_SOLDIER_BLASTER_5, MZ2_SOLDIER_BLASTER_6, MZ2_SOLDIER_BLASTER_7, MZ2_SOLDIER_BLASTER_8};
-static int shotgun_flash [] = {MZ2_SOLDIER_SHOTGUN_1, MZ2_SOLDIER_SHOTGUN_2, MZ2_SOLDIER_SHOTGUN_3, MZ2_SOLDIER_SHOTGUN_4, MZ2_SOLDIER_SHOTGUN_5, MZ2_SOLDIER_SHOTGUN_6, MZ2_SOLDIER_SHOTGUN_7, MZ2_SOLDIER_SHOTGUN_8};
+static int shotgun_flash[] = { MZ2_SOLDIER_BLASTER_1, MZ2_SOLDIER_BLASTER_2, MZ2_SOLDIER_BLASTER_3, MZ2_SOLDIER_BLASTER_4, MZ2_SOLDIER_BLASTER_5, MZ2_SOLDIER_BLASTER_6, MZ2_SOLDIER_BLASTER_7, MZ2_SOLDIER_BLASTER_8 };
 static int machinegun_flash [] = {MZ2_SOLDIER_MACHINEGUN_1, MZ2_SOLDIER_MACHINEGUN_2, MZ2_SOLDIER_MACHINEGUN_3, MZ2_SOLDIER_MACHINEGUN_4, MZ2_SOLDIER_MACHINEGUN_5, MZ2_SOLDIER_MACHINEGUN_6, MZ2_SOLDIER_MACHINEGUN_7, MZ2_SOLDIER_MACHINEGUN_8};
 
 void soldier_fire (edict_t *self, int flash_number)
@@ -472,7 +477,7 @@ void soldier_fire (edict_t *self, int flash_number)
 	if (self->s.skinnum < 2)
 		flash_index = blaster_flash[flash_number];
 	else if (self->s.skinnum < 4)
-		flash_index = shotgun_flash[flash_number];
+		flash_index = blaster_flash[flash_number]; //shotgun_flash[flash_number];
 	else
 		flash_index = machinegun_flash[flash_number];
 
@@ -507,7 +512,8 @@ void soldier_fire (edict_t *self, int flash_number)
 	}
 	else if (self->s.skinnum <= 3)
 	{
-		monster_fire_shotgun (self, start, aim, 2, 1, DEFAULT_SHOTGUN_HSPREAD, DEFAULT_SHOTGUN_VSPREAD, DEFAULT_SHOTGUN_COUNT, flash_index);
+		monster_fire_blaster(self, start, aim, 5, 600, flash_index, EF_BLASTER);
+		//monster_fire_shotgun (self, start, aim, 2, 1, DEFAULT_SHOTGUN_HSPREAD, DEFAULT_SHOTGUN_VSPREAD, DEFAULT_SHOTGUN_COUNT, flash_index);
 	}
 	else
 	{
@@ -771,6 +777,7 @@ mmove_t soldier_move_attack6 = {FRAME_runs01, FRAME_runs14, soldier_frames_attac
 
 void soldier_attack(edict_t *self)
 {
+	self->inAttack = true;
 	if (self->s.skinnum < 4)
 	{
 		if (random() < 0.5)
@@ -1206,7 +1213,7 @@ void SP_monster_soldier_x (edict_t *self)
 	VectorSet (self->maxs, 16, 16, 32);
 	self->movetype = MOVETYPE_STEP;
 	self->solid = SOLID_BBOX;
-
+	self->inAttack = false;
 	sound_idle =	gi.soundindex ("soldier/solidle1.wav");
 	sound_sight1 =	gi.soundindex ("soldier/solsght1.wav");
 	sound_sight2 =	gi.soundindex ("soldier/solsrch1.wav");

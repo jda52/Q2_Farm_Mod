@@ -120,6 +120,7 @@ void SP_monster_berserk (edict_t *self);
 void SP_monster_gladiator (edict_t *self);
 void SP_monster_gunner (edict_t *self);
 void SP_monster_infantry (edict_t *self);
+void SP_monster_NPC(edict_t *self);
 void SP_monster_soldier_light (edict_t *self);
 void SP_monster_soldier (edict_t *self);
 void SP_monster_soldier_ss (edict_t *self);
@@ -240,6 +241,7 @@ spawn_t	spawns[] = {
 	{"monster_gladiator", SP_monster_gladiator},
 	{"monster_gunner", SP_monster_gunner},
 	{"monster_infantry", SP_monster_infantry},
+	{"monster_NPC", SP_monster_NPC},
 	{"monster_soldier_light", SP_monster_soldier_light},
 	{"monster_soldier", SP_monster_soldier},
 	{"monster_soldier_ss", SP_monster_soldier_ss},

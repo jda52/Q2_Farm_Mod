@@ -714,6 +714,7 @@ void ai_walk (edict_t *self, float dist);
 void ai_turn (edict_t *self, float dist);
 void ai_run (edict_t *self, float dist);
 void ai_charge (edict_t *self, float dist);
+void allyChange(edict_t *self, edict_t *other);
 int range (edict_t *self, edict_t *other);
 
 void FoundTarget (edict_t *self);
@@ -734,7 +735,13 @@ void fire_grenade2 (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int 
 void fire_rocket (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, float damage_radius, int radius_damage);
 void fire_rail (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick);
 void fire_bfg (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, float damage_radius);
-
+void plantApple(edict_t *self, vec3_t start, vec3_t aimdir, float timer);
+void plantBanana(edict_t *self, vec3_t start, vec3_t aimdir, float timer);
+void plantCherry(edict_t *self, vec3_t start, vec3_t aimdir, float timer);
+void plantDurian(edict_t *self, vec3_t start, vec3_t aimdir, float timer);
+void plantElder(edict_t *self, vec3_t start, vec3_t aimdir, float timer);
+void fire_water(edict_t *self, vec3_t start, vec3_t dir, int speed, int effect);
+void harvest(edict_t *self, vec3_t start, vec3_t aimdir, int hspread, int vspread);
 //
 // g_ptrail.c
 //
@@ -815,6 +822,18 @@ void ChaseNext(edict_t *ent);
 void ChasePrev(edict_t *ent);
 void GetChaseTarget(edict_t *ent);
 
+//
+//	m_NPC.c
+//
+void Buy(edict_t *ent);
+void Sell(edict_t *ent);
+void SP_monster_NPC(edict_t *owner);
+void sprinkle(edict_t *self);
+void SP_sprinkler(edict_t *self);
+void SP_armor(edict_t *self);
+void SP_seedMaker(edict_t *ent);
+void armorTouch(edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf);
+void seedTouch(edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf);
 //============================================================================
 
 // client_t->anim_priority
@@ -863,6 +882,21 @@ typedef struct
 	int			helpchanged;
 
 	qboolean	spectator;			// client is a spectator
+	int apple;
+	int banana;
+	int cherry;
+	int durian;
+	int elder;
+	int appleSeeds;
+	int bananaSeeds;
+	int cherrySeeds;
+	int durianSeeds;
+	int elderSeeds;
+	int sprinkler;
+	int armorForge;
+	int seedMaker;
+	int Mondrops;
+	int cash;
 } client_persistant_t;
 
 // client data that stays across deathmatch respawns
@@ -893,7 +927,6 @@ struct gclient_s
 	qboolean	showinventory;		// set layout stat
 	qboolean	showhelp;
 	qboolean	showhelpicon;
-
 	int			ammo_index;
 
 	int			buttons;
@@ -960,6 +993,8 @@ struct gclient_s
 
 	edict_t		*chase_target;		// player we are chasing
 	qboolean	update_chase;		// need to update chase info?
+	int seedType;
+	int equipBuild;
 };
 
 
@@ -1045,6 +1080,7 @@ struct edict_s
 	void		(*use)(edict_t *self, edict_t *other, edict_t *activator);
 	void		(*pain)(edict_t *self, edict_t *other, float kick, int damage);
 	void		(*die)(edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, vec3_t point);
+	//void		(*touch)(edict_t *self, edict_t*other);
 
 	float		touch_debounce_time;		// are all these legit?  do we need more/less of them?
 	float		pain_debounce_time;
@@ -1110,5 +1146,13 @@ struct edict_s
 	// common data blocks
 	moveinfo_t		moveinfo;
 	monsterinfo_t	monsterinfo;
+
+	edict_t *ally;   
+	edict_t *master;  
+	qboolean inShop;
+	qboolean isAlly;
+	qboolean inAttack;
+	qboolean inArmor;
+	qboolean inSEMake;
 };
 

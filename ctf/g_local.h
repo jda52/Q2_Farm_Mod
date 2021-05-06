@@ -1142,9 +1142,14 @@ struct edict_s
 
 	gitem_t		*item;			// for bonus items
 
+	// WF - Decoy variables
+	
+
 	// common data blocks
 	moveinfo_t		moveinfo;
 	monsterinfo_t	monsterinfo;
+
+	
 };
 
 //ZOID

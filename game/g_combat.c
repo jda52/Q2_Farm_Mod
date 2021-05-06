@@ -296,10 +296,9 @@ void M_ReactToDamage (edict_t *targ, edict_t *attacker)
 {
 	if (!(attacker->client) && !(attacker->svflags & SVF_MONSTER))
 		return;
-
-	if (attacker == targ || attacker == targ->enemy)
-		return;
-
+	
+	//if (attacker == targ || attacker == targ->enemy)
+		//return;
 	// if we are a good guy monster and our attacker is a player
 	// or another good guy, do not get mad at them
 	if (targ->monsterinfo.aiflags & AI_GOOD_GUY)
@@ -307,11 +306,10 @@ void M_ReactToDamage (edict_t *targ, edict_t *attacker)
 		if (attacker->client || (attacker->monsterinfo.aiflags & AI_GOOD_GUY))
 			return;
 	}
-
 	// we now know that we are not both good guys
 
 	// if attacker is a client, get mad at them because he's good and we're not
-	if (attacker->client)
+	if (attacker->client && targ->isAlly == false)
 	{
 		targ->monsterinfo.aiflags &= ~AI_SOUND_TARGET;
 
@@ -364,6 +362,14 @@ void M_ReactToDamage (edict_t *targ, edict_t *attacker)
 		targ->enemy = attacker->enemy;
 		if (!(targ->monsterinfo.aiflags & AI_DUCKED))
 			FoundTarget (targ);
+	}
+	if (targ->isAlly == true)
+	{
+		gi.centerprintf(attacker, "Enemy is now ally\nNow have %i elder berries", attacker->client->pers.elder);
+		targ->oldenemy = NULL;
+		targ->enemy = NULL;
+		if (!(targ->monsterinfo.aiflags & AI_DUCKED))
+			FoundTarget(targ);
 	}
 }
 
