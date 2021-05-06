@@ -17,6 +17,13 @@ Tools
 - Blaster - Allows you to plant crops
 - Shotgun - lets you tame wild monsters if you have elder berries, cannot tame them while they are attacking (monster taming)
 	- Command: type "manyelders" if you are impatient to grow elder berries
-- Super Shotgun - Allows you to gain random seeds from tamed monsters
+- Super Shotgun - Allows you to gain 1-3 drops from tamed monsters
 - Rail gun- shoots out water to make the crops grow faster
-- grenade launcher- Lets you build structures, such as a sprinkler
+- grenade launcher- Lets you build structures, such as a sprinkler,armor forge, or seed maker
+
+Equipment
+- Sprinkler- Automatically shoots water, has start up time
+- Armor Forge- lets you craft more armor points, based on how many monster drops you have
+	- Every drop gives you 5 points
+- Seed maker- Converts fruits to seeds, from 1-3
+- Command - type "sprinkler", "armorforge", or "seedmaker" into the console
